@@ -1,0 +1,1907 @@
+================================================================================
+    TUTORIAL LENGKAP SPLIT FRAME STUDIO SNAKE GAME - 14 HARI
+    Untuk Pemula | Step-by-Step | Kode Siap Copy-Paste
+================================================================================
+
+📚 PANDUAN MEMBACA:
+1. Baca bagian "TUJUAN" untuk tahu apa yang akan dibuat hari ini
+2. Ikuti "STEP-BY-STEP" sesuai urutan
+3. Copy-paste kode dari "KODE LENGKAP"
+4. Lakukan "TESTING" untuk verify hasilnya
+5. Lihat "TROUBLESHOOTING" jika ada error
+
+================================================================================
+PERSIAPAN AWAL - SEBELUM HARI 1
+================================================================================
+
+1. INSTALL GODOT ENGINE
+   - Buka https://godotengine.org/download
+   - Download "Standard" version (bukan Mono)
+   - Pilih versi 4.0 atau lebih baru
+   - Extract file (Windows: langsung bisa dijalankan)
+   - Jalankan godot.exe
+
+2. MEMBUAT PROJECT BARU DI GODOT
+   Step 1: Klik "Create New Project"
+   Step 2: Set resolusi: 1280 x 720
+   Step 3: Pastikan "Renderer" = "Canvas"
+   Step 4: Pilih folder kosong untuk project
+   Step 5: Klik "Create & Edit"
+
+3. STRUKTUR FOLDER PROJECT (akan kita buat):
+   res://
+   ├── scenes/
+   │   ├── Game.tscn
+   │   ├── MainMenu.tscn
+   │   └── GameOver.tscn
+   ├── scripts/
+   │   ├── Game.gd
+   │   ├── GameManager.gd
+   │   └── UI/
+   └── sounds/
+       ├── eat.wav
+       └── gameover.wav
+
+================================================================================
+HARI 1: ANNOUNCEMENT & SETUP PROJECT
+================================================================================
+
+⏱️ WAKTU: 1-2 jam
+🎯 TUJUAN: 
+   - Setup Godot project
+   - Paham interface Godot
+   - Buat scene pertama yang bisa dijalankan
+   - POST DI SOCIAL MEDIA
+
+📝 APA YANG AKAN KITA LAKUKAN:
+
+Hari ini kita akan:
+1. Install Godot (mungkin sudah done)
+2. Buat project baru
+3. Explore interface Godot (Scene panel, Inspector, Script editor)
+4. Buat scene pertama (MainScene dengan Node2D)
+5. Save dan jalankan (tekan F5)
+
+============================================
+STEP 1: MEMBUAT PROJECT BARU
+============================================
+
+Jika belum punya project, ikuti langkah di "PERSIAPAN AWAL" di atas.
+
+Jika sudah punya project, cukup buka Godot dan tunggu sampai scene editor siap.
+
+============================================
+STEP 2: MEMAHAMI INTERFACE GODOT
+============================================
+
+Ketika Godot terbuka, kamu akan melihat beberapa panel:
+
+┌─────────────────────────────────────────────────┐
+│  MENU BAR (File, Edit, View, etc)              │
+├──────────────┬──────────────────┬──────────────┤
+│              │                  │              │
+│  SCENE       │   VIEWPORT       │  INSPECTOR  │
+│  PANEL       │   (tempat        │  (properties│
+│  (kiri)      │   menggambar)     │   node)     │
+│              │                  │             │
+├──────────────┴──────────────────┴──────────────┤
+│  OUTPUT CONSOLE (untuk error messages)         │
+└──────────────────────────────────────────────┘
+
+PENJELASAN TIAP PANEL:
+
+📁 SCENE PANEL (Kiri atas):
+   - Tampilkan struktur node dalam scene
+   - Kamu bisa tambah, hapus, pilih node di sini
+   - Setiap game object adalah "Node"
+
+🎨 VIEWPORT (Tengah):
+   - Canvas tempat kamu menggambar/melihat game
+   - Kamu bisa click di sini untuk select object
+   - Drag untuk move object
+
+🔧 INSPECTOR (Kanan):
+   - Tampilkan properties dari node yang dipilih
+   - Bisa ubah position, size, color, dll
+   - Setiap property bisa diubah manual atau via code
+
+📝 SCRIPT EDITOR (Bawah):
+   - Tempat menulis kode GDScript
+   - Akan terbuka jika double-click file .gd
+
+============================================
+STEP 3: MEMBUAT FIRST SCENE
+============================================
+
+Sekarang kita membuat scene pertama.
+
+Di SCENE PANEL (kiri), kamu akan lihat tombol "+" di atas.
+Klik tombol itu untuk ADD NEW SCENE.
+
+Dialog akan muncul: "Create Node"
+Pilih: Node2D
+Klik: Create
+
+Congratulations! Kamu sudah membuat node pertama.
+
+Di Scene panel, kamu akan lihat:
+  📌 Node2D
+
+Ini adalah "root node" - parent dari semua object di scene ini.
+
+============================================
+STEP 4: SAVE SCENE
+============================================
+
+Sekarang save scene ini dengan nama "Game".
+
+Caranya:
+1. Di Scene panel, klik kanan pada "Node2D"
+2. Pilih "Save Branch as Scene"
+3. Dialog muncul, ketik nama: "Game"
+4. Pilih folder: res://scenes/ (buat folder "scenes" jika belum ada)
+5. Klik "Save"
+
+Sekarang node akan berganti nama jadi "Game" dan akan tersimpan sebagai:
+res://scenes/Game.tscn
+
+✅ DONE!
+
+============================================
+STEP 5: MENJALANKAN SCENE
+============================================
+
+Sekarang mari kita jalankan scene pertama kita.
+
+Cara 1: Tekan F5 (Play)
+Cara 2: Klik tombol "Play" di atas (ikon segitiga)
+
+Game akan terbuka dalam window baru. 
+Akan kosong, tapi itulah yang seharusnya — kita belum add apa-apa.
+
+Tekan Esc untuk close game window dan kembali ke editor.
+
+✅ KESUKSESAN: Scene bisa dijalankan tanpa error!
+
+============================================
+STEP 6: VERIFIKASI SETUP
+============================================
+
+Checklist:
+✅ Godot terinstall dan bisa dibuka
+✅ Project dibuat dengan resolusi 1280x720
+✅ Scene "Game" dibuat dan tersimpan di res://scenes/Game.tscn
+✅ Scene bisa dijalankan dengan F5 tanpa error
+✅ Folder structure terlihat rapi
+
+Jika semua ✅, lanjut ke step testing.
+
+============================================
+TESTING
+============================================
+
+Test 1: Scene bisa dibuka?
+   ➜ Tekan F5
+   ➜ Window hitam/kosong muncul
+   ➜ Tekan Esc untuk close
+   ✅ PASS
+
+Test 2: Scene bisa disave?
+   ➜ Scene panel ada "Game" node?
+   ➜ File res://scenes/Game.tscn ada?
+   ✅ PASS
+
+Test 3: Console tidak ada error?
+   ➜ Di output console (bawah), tidak ada pesan error merah?
+   ✅ PASS
+
+Jika semua test PASS, kamu siap untuk Hari 2!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ ERROR: "Scene could not be instantiated"
+   → Pastikan Node2D sudah di-save sebagai .tscn file
+   → Coba buat scene baru dari awal
+
+❌ ERROR: "Illegal resource path"
+   → Pastikan path file benar (res://scenes/Game.tscn)
+   → Hindari spasi di nama file/folder
+
+❌ Window game tidak muncul saat F5
+   → Buka Output console (bawah)
+   → Lihat error message
+   → Fix sesuai error yang terlihat
+
+❌ Godot not responding
+   → Tunggu beberapa detik (loading)
+   → Jika tetap stuck, restart Godot
+
+============================================
+SELESAI HARI 1!
+============================================
+
+Pengetahuan yang didapat:
+✅ Godot interface dan navigasi
+✅ Membuat dan save scene
+✅ Menjalankan game dengan F5
+
+Next: Hari 2 - Membuat grid system dan visual game board
+
+================================================================================
+HARI 2: KENALAN SAMA GODOT - NODE & SCENE
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Pahami node architecture di Godot
+   - Setup game board dengan grid visual
+   - Add UI Label untuk score (akan diguna nantinya)
+
+📝 APA YANG AKAN KITA LAKUKAN:
+
+Hari 2 kita akan:
+1. Paham apa itu "Node Tree" - struktur hierarchy
+2. Add child nodes ke Node2D (untuk game board, UI, dll)
+3. Setup ColorRect untuk background
+4. Add Label untuk score display
+5. Jalankan dan lihat hasilnya
+
+============================================
+STEP 1: MEMAHAMI NODE ARCHITECTURE
+============================================
+
+Di Godot, semua game object adalah "Node". Node bisa punya child nodes.
+Struktur ini biasa disebut "Node Tree" atau "Scene Tree".
+
+CONTOH STRUKTUR SNAKE GAME:
+┌─────────────────────────────────┐
+│ Game (Node2D) - ROOT NODE       │
+├─────────────────────────────────┤
+│ ├─ GameBoard (ColorRect)        │  <- Background game area
+│ ├─ ScoreLabel (Label)           │  <- Text "Score: 0"
+│ ├─ Snake (Node2D)               │  <- Ular (akan kita buat nanti)
+│ └─ Food (Node2D)                │  <- Makanan (akan kita buat nanti)
+└─────────────────────────────────┘
+
+Parent-Child Relationship:
+- Parent: Node yang lebih atas (Game)
+- Child: Node yang ada di bawahnya (GameBoard, ScoreLabel, dll)
+
+KENAPA PENTING?
+- Jika parent di-move, child juga ikut bergerak
+- Hierarchical organization = mudah dikelola
+- Setiap node punya properties masing-masing
+
+============================================
+STEP 2: ADD CHILD NODES - GAME BOARD
+============================================
+
+Mari kita add background untuk game board.
+
+1. Buka res://scenes/Game.tscn (harus udah terbuka dari Hari 1)
+
+2. Di SCENE PANEL, klik pada "Game" node untuk select
+
+3. Klik tombol "+" untuk add child node
+
+4. Dialog "Create Child Node" muncul
+
+5. Di search box, ketik: "ColorRect"
+
+6. Klik pada "ColorRect" untuk select
+
+7. Klik "Create" button
+
+8. Sekarang di Scene Tree kamu akan lihat:
+   Game (Node2D)
+   └─ ColorRect
+
+9. Di INSPECTOR (kanan), ubah properties ColorRect:
+   - Name: "GameBoard" (biar jelas)
+   - Size: X=640, Y=480 (ukuran game board)
+   - Position: X=0, Y=0
+   - Color: White (atau #FFFFFF)
+
+Caranya:
+- Di Inspector, klik field "Name" dan ubah ke "GameBoard"
+- Klik field "Size" → Custom Size
+- Set X=640, Y=480
+- Klik field "Color" dan pilih white
+
+✅ DONE! Kamu punya game board background!
+
+============================================
+STEP 3: ADD UI LABEL UNTUK SCORE
+============================================
+
+Sekarang add Label untuk menampilkan score nanti.
+
+1. Klik tombol "+" lagi untuk add child node
+
+2. Search dan select: "Label"
+
+3. Klik Create
+
+4. Di Scene Tree:
+   Game (Node2D)
+   ├─ GameBoard (ColorRect)
+   └─ Label
+
+5. Di INSPECTOR, ubah properties:
+   - Name: "ScoreLabel"
+   - Text: "Score: 0"
+   - Position: X=20, Y=20 (di atas, sedikit offset)
+   - Font Size: 24 (supaya visible)
+   - Text Color: Black (#000000)
+
+Caranya:
+- Field "Text" → hapus default text, ketik "Score: 0"
+- Field "Position" → X=20, Y=20
+- Di bawah, cari "Label" → "Theme" → "Font Sizes" → "font_size" = 24
+
+✅ DONE! Kamu punya score display!
+
+============================================
+STEP 4: SETUP LAYOUT
+============================================
+
+Sekarang arrange supaya terlihat rapi.
+
+Di VIEWPORT (tengah), kamu akan lihat:
+- Kotak putih (GameBoard)
+- Text "Score: 0" di atas kiri
+
+Jika layout tidak sesuai keinginan, ubah di Inspector:
+- Select GameBoard → ubah Position atau Size
+- Select ScoreLabel → ubah Position
+
+Saran layout:
+- GameBoard: Position X=0, Y=0, Size 640x480
+- ScoreLabel: Position X=20, Y=20
+- Ini akan membuat score text di atas kotak putih
+
+============================================
+STEP 5: SAVE & RUN
+============================================
+
+1. Save scene: Ctrl+S (atau File → Save)
+
+2. Jalankan scene: F5
+
+3. Di game window, kamu akan lihat:
+   - Kotak putih (game board)
+   - Text "Score: 0" di atas
+
+4. Tekan Esc untuk close game
+
+✅ KESUKSESAN!
+
+============================================
+TESTING
+============================================
+
+Test 1: Scene terstruktur dengan benar?
+   ➜ Di Scene panel, ada struktur:
+      Game
+      ├─ GameBoard (ColorRect)
+      └─ ScoreLabel (Label)
+   ✅ PASS
+
+Test 2: Visual terlihat benar saat dijalankan?
+   ➜ Tekan F5
+   ➜ Lihat game window:
+      - Ada kotak putih (GameBoard)
+      - Ada text "Score: 0" di atas
+   ✅ PASS
+
+Test 3: Tidak ada error?
+   ➜ Di output console, tidak ada error merah
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 3!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ ColorRect tidak terlihat
+   → Cek color-nya di Inspector, pastikan bukan transparent
+   → Cek Size di Inspector, pastikan > 0
+
+❌ Label text tidak terlihat
+   → Cek posisi Label, mungkin out of bounds
+   → Cek color text, pastikan bukan putih (atau ganti background)
+   → Cek Font Size, pastikan cukup besar
+
+❌ Layout berantakan
+   → Select node yang ingin diubah
+   → Di Inspector, ubah Position atau Size
+   → Atau drag langsung di viewport dengan mouse
+
+============================================
+SELESAI HARI 2!
+============================================
+
+Pengetahuan yang didapat:
+✅ Memahami Node Tree architecture
+✅ Membuat dan arrange child nodes
+✅ Setup UI dengan Label dan ColorRect
+✅ Basic scene layout
+
+Next: Hari 3 - Membuat ular bergerak!
+
+================================================================================
+HARI 3: ULAR PERTAMA KALI BERGERAK
+================================================================================
+
+⏱️ WAKTU: 3-4 jam
+🎯 TUJUAN:
+   - Implementasi movement system
+   - Input handling (4 arah)
+   - Grid-based movement
+   - Pertama kali script GDScript!
+
+📝 PENJELASAN KONSEP:
+
+Untuk membuat ular bergerak, kita butuh:
+1. VARIABLE: snake_pos (posisi ular)
+2. VARIABLE: direction (arah yang bergerak)
+3. FUNCTION: _process() - dipanggil setiap frame
+4. INPUT HANDLING: Input.is_action_pressed() - tangkap tombol keyboard
+
+TIMING:
+Ular tidak bergerak setiap frame (terlalu cepat!).
+Ular bergerak setiap X detik pakai "move_timer".
+Contoh: bergerak setiap 0.15 detik = smooth movement.
+
+GRID SYSTEM:
+Permainan snake itu grid-based (seperti catur).
+- Tiap cell: 32x32 pixel
+- snake_pos: posisi dalam grid (0-19, 0-14 untuk board 640x480)
+- visual_pos: snake_pos * 32 = pixel position
+
+============================================
+STEP 1: BUAT SCRIPT BARU
+============================================
+
+1. Buka res://scenes/Game.tscn (sudah terbuka dari Hari 2)
+
+2. Klik pada node "Game" di Scene panel untuk select
+
+3. Klik tombol "Script" di SCRIPT EDITOR (bawah tengah)
+   Atau: Klik kanan "Game" → "Attach Script"
+
+4. Dialog "Create Script" muncul
+   - Path: res://scripts/Game.gd
+   - Template: Default
+   - Klik "Create"
+
+5. Script editor akan membuka dengan template dasar:
+   extends Node2D
+   
+   func _ready():
+       pass
+   
+   func _process(delta):
+       pass
+
+✅ Script sudah attach!
+
+============================================
+STEP 2: TULIS KODE - SETUP VARIABLES
+============================================
+
+Sekarang kita tulis kode untuk movement.
+
+Di script editor, hapus template default dan copy code ini:
+
+---COPY MULAI---
+
+extends Node2D
+
+# ==========================================
+# GAME CONSTANTS
+# ==========================================
+var GRID_SIZE = 32          # Ukuran tiap cell dalam pixel
+var GRID_WIDTH = 20         # Jumlah cell horizontal (640 / 32 = 20)
+var GRID_HEIGHT = 15        # Jumlah cell vertikal (480 / 32 = 15)
+var MOVE_SPEED = 0.15       # Detik antara tiap movement
+
+# ==========================================
+# SNAKE VARIABLES
+# ==========================================
+var snake_pos = Vector2(10, 10)      # Posisi ular di grid (mulai tengah)
+var direction = Vector2(1, 0)        # Arah sekarang (bergerak kanan)
+var next_direction = Vector2(1, 0)   # Input untuk frame depan
+var move_timer = 0.0                 # Counter untuk timing
+
+# ==========================================
+# MAIN FUNCTIONS
+# ==========================================
+
+func _ready():
+    """
+    _ready() dipanggil saat scene start
+    Kita gunakan untuk setup awal game
+    """
+    pass  # Untuk sekarang, tidak ada setup khusus
+
+func _process(delta):
+    """
+    _process() dipanggil setiap frame (~60 fps)
+    delta = waktu (detik) sejak frame terakhir
+    
+    Kita gunakan untuk:
+    1. Tangkap input keyboard
+    2. Update timer movement
+    3. Jalankan movement jika timer cukup
+    """
+    
+    # ===== HANDLE INPUT (SETIAP FRAME) =====
+    # Cek tombol keyboard dan update next_direction
+    
+    if Input.is_action_pressed("ui_right"):
+        # Jika tombol kanan ditekan, dan ular tidak sedang bergerak kiri
+        # (prevent reverse 180° - akan explain nanti)
+        if direction != Vector2(-1, 0):
+            next_direction = Vector2(1, 0)
+    
+    elif Input.is_action_pressed("ui_left"):
+        if direction != Vector2(1, 0):
+            next_direction = Vector2(-1, 0)
+    
+    elif Input.is_action_pressed("ui_down"):
+        if direction != Vector2(0, -1):
+            next_direction = Vector2(0, 1)
+    
+    elif Input.is_action_pressed("ui_up"):
+        if direction != Vector2(0, 1):
+            next_direction = Vector2(0, -1)
+    
+    # ===== UPDATE TIMER =====
+    # Tambahkan delta ke timer setiap frame
+    move_timer += delta
+    
+    # ===== MOVE SNAKE SETIAP X DETIK =====
+    # Jika timer sudah >= MOVE_SPEED, ular bergerak
+    if move_timer >= MOVE_SPEED:
+        move_snake()           # Jalankan movement
+        move_timer = 0.0       # Reset timer
+        queue_redraw()         # Redraw canvas (akan explain di draw)
+
+# ===== MOVEMENT FUNCTION =====
+
+func move_snake():
+    """
+    move_snake() menggerakkan ular sesuai arah
+    Dipanggil setiap MOVE_SPEED detik
+    """
+    # Update arah dengan input terbaru
+    direction = next_direction
+    
+    # Pindahkan ular ke cell sebelah sesuai direction
+    # direction adalah Vector2(1,0) / (-1,0) / (0,1) / (0,-1)
+    # Jadi snake_pos berubah 1 cell per gerak
+    snake_pos += direction
+    
+    # TODO: Nanti kita akan tambah:
+    # - Cek collision (nabrak dinding, nabrak badan)
+    # - Cek makan (collision dengan makanan)
+    # - Draw body segments (ekor ular)
+
+# ===== DRAW FUNCTION =====
+
+func _draw():
+    """
+    _draw() dipanggil setiap frame untuk menggambar
+    Ini tempat kita render snake, makanan, dll
+    """
+    # Gambar ular sebagai kotak merah di posisi snake_pos
+    # Konversi dari grid position ke pixel position
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    
+    # draw_rect(area, color)
+    draw_rect(head_rect, Color.RED)
+
+---COPY SELESAI---
+
+Penjelasan:
+
+1. VARIABLES:
+   - GRID_SIZE = 32: tiap cell 32x32 pixel
+   - snake_pos: posisi ular di grid (bukan pixel)
+   - direction: arah sekarang (Vector2 dengan nilai -1, 0, atau 1)
+   - next_direction: input dari pemain untuk frame depan
+   - move_timer: counter untuk timing
+
+2. _process(delta):
+   - Jalankan setiap frame (~60 fps)
+   - delta = waktu sejak frame terakhir
+   - Kita gunakan untuk input handling dan timer
+   - Setiap MOVE_SPEED detik, panggil move_snake()
+
+3. move_snake():
+   - Jalankan saat timer cukup
+   - Update direction dengan next_direction
+   - snake_pos += direction (gerak 1 cell)
+
+4. _draw():
+   - Gambar snake sebagai kotak merah
+   - snake_pos * GRID_SIZE = konversi ke pixel
+
+============================================
+STEP 3: SAVE & TEST KODE
+============================================
+
+1. Save script: Ctrl+S
+
+2. Kembali ke Scene editor
+   Klik tab "Game.tscn" di atas
+
+3. Jalankan game: F5
+
+4. Di game window:
+   - Lihat kotak putih (game board)
+   - Lihat red square (ular)
+   - Tekan arrow keys
+   - Ular harus bergerak ke 4 arah!
+
+5. Tekan Esc untuk close
+
+✅ KESUKSESAN! Ular bergerak!
+
+============================================
+TESTING
+============================================
+
+Test 1: Ular bergerak ke kanan saat tombol kanan ditekan?
+   ➜ F5 untuk jalankan game
+   ➜ Tekan arrow RIGHT
+   ➜ Red square bergerak ke kanan
+   ➜ Gerakan smooth? (bukan super cepat?)
+   ✅ PASS
+
+Test 2: Ular bergerak ke 4 arah?
+   ➜ Tekan UP, DOWN, LEFT, RIGHT
+   ➜ Ular bergerak sesuai arah
+   ✅ PASS
+
+Test 3: Ular tidak bisa reverse 180° langsung?
+   ➜ Bergerak RIGHT
+   ➜ Cepat tekan LEFT
+   ➜ Ular tidak langsung balik ke arah sebelah
+   ➜ (Ini expected behavior karena cek "direction != Vector2(1, 0)")
+   ✅ PASS
+
+Test 4: Tidak ada error?
+   ➜ Output console tidak ada error merah
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 4!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Ular tidak bergerak
+   → Cek script di-attach ke node "Game"?
+   → Cek output console untuk error message
+   → Pastikan INPUT dikonfigurasi (Project → Settings → Input Map)
+     Seharusnya ui_up, ui_down, ui_left, ui_right sudah default
+
+❌ Ular bergerak super cepat/lambat
+   → Ubah MOVE_SPEED di script
+   → 0.10 = cepat, 0.20 = lambat, 0.15 = normal
+   → Save & run lagi
+
+❌ Ular not visible / warna tidak muncul
+   → Cek warna background (mungkin sama dengan red?)
+   → Ubah head color di _draw() jadi color berbeda
+   → Contoh: draw_rect(head_rect, Color.YELLOW)
+
+❌ Input tidak detected
+   → Buka Project → Project Settings → Input Map
+   → Pastikan ui_up, ui_down, ui_left, ui_right ada
+   → Pastikan masing-masing punya binding (arrow keys atau WASD)
+
+============================================
+SELESAI HARI 3!
+============================================
+
+Pengetahuan yang didapat:
+✅ GDScript basics (variables, functions)
+✅ Input handling dengan Input.is_action_pressed()
+✅ Game loop dengan _process() dan delta time
+✅ Drawing dengan _draw() dan draw_rect()
+✅ Vector2 dan grid-based positioning
+✅ Timing dengan move_timer
+
+Ular kalian sudah bisa bergerak! 🐍
+
+Next: Hari 4 - Membuat ekor ular!
+
+================================================================================
+HARI 4: ULAR BISA PANJANG - SISTEM EKOR
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Implementasi body segments dengan Array
+   - Ular bisa tumbuh
+   - Draw kepala dan badan dengan warna berbeda
+
+📝 PENJELASAN KONSEP:
+
+ARRAY:
+Array adalah variabel yang bisa menyimpan banyak nilai.
+Contoh: var body_segments = [Vector2(10, 10), Vector2(10, 11), Vector2(10, 12)]
+
+BODY SEGMENTS:
+Setiap bagian tubuh ular adalah Vector2(x, y) di dalam array.
+- Elemen 0: bagian paling dekat ke kepala
+- Elemen terakhir: ekor paling belakang
+
+CARA KERJA EKOR:
+1. Setiap frame, kepala bergerak
+2. Bagian body ke-1 ambil posisi kepala frame sebelumnya
+3. Bagian body ke-2 ambil posisi body ke-1 frame sebelumnya
+4. Dan seterusnya... menciptakan efek "mengikut"
+
+============================================
+STEP 1: PERSIAPKAN SCRIPT DARI HARI 3
+============================================
+
+Buka res://scripts/Game.gd (script dari Hari 3)
+
+Kita akan menambahkan variable dan function baru.
+Struktur akan tetap sama, kita cuma tambah di beberapa tempat.
+
+============================================
+STEP 2: TAMBAH BODY VARIABLES
+============================================
+
+Di bagian "# ==========================================
+# SNAKE VARIABLES" tambahkan:
+
+---COPY MULAI---
+
+var body_segments = []          # Array untuk menyimpan posisi tiap segment
+var body_length = 3             # Panjang awal ular (berapa segment)
+
+---COPY SELESAI---
+
+Sekarang variable section akan jadi:
+
+var snake_pos = Vector2(10, 10)      # Posisi kepala
+var direction = Vector2(1, 0)
+var next_direction = Vector2(1, 0)
+var move_timer = 0.0
+var body_segments = []               # ← BARU
+var body_length = 3                  # ← BARU
+
+============================================
+STEP 3: INITIALIZE BODY DI _ready()
+============================================
+
+Ubah fungsi _ready() dari:
+
+func _ready():
+    pass
+
+Menjadi:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Saat game dimulai, kita setup body segments
+    """
+    # Buat body segments awal
+    # Ular dimulai dengan panjang 3 (kepala + 2 body)
+    for i in range(body_length):
+        # Setiap segment adalah posisi ular dikurangi jarak dari kepala
+        # i=0: posisi kepala
+        # i=1: 1 cell di belakang
+        # i=2: 2 cell di belakang
+        var segment_pos = snake_pos - direction * i
+        body_segments.append(segment_pos)
+
+---COPY SELESAI---
+
+Penjelasan:
+- for i in range(body_length): loop 3 kali (i = 0, 1, 2)
+- direction * i = perubahan posisi
+- direction = Vector2(1, 0) (bergerak kanan)
+- direction * 0 = (0, 0)
+- direction * 1 = (1, 0)
+- direction * 2 = (2, 0)
+- snake_pos - direction * i = posisi di belakang kepala
+- body_segments.append() = tambahkan ke array
+
+============================================
+STEP 4: UPDATE move_snake() FUNCTION
+============================================
+
+Ganti seluruh function move_snake() dengan:
+
+---COPY MULAI---
+
+func move_snake():
+    """
+    Gerakkan ular:
+    1. Update direction
+    2. Pindahkan kepala
+    3. Update body segments (setiap bagian ambil posisi depan)
+    4. Hapus ekor (atau tambah jika makan)
+    """
+    # Update arah
+    direction = next_direction
+    
+    # Pindahkan kepala
+    snake_pos += direction
+    
+    # PENTING: Insert kepala ke depan array
+    # body_segments[0] sekarang = posisi kepala
+    # body_segments[1] = posisi kepala frame sebelumnya
+    # dll...
+    body_segments.insert(0, snake_pos)
+    
+    # Hapus ekor kalau tidak makan (nanti kita update ini)
+    # Sekarang kita cuma hapus kalau body > body_length
+    if body_segments.size() > body_length:
+        body_segments.pop_back()  # pop_back() = hapus elemen terakhir
+    
+    # TODO: Nanti tambah:
+    # - Cek collision
+    # - Cek makan (jika ya, grow())
+
+---COPY SELESAI---
+
+============================================
+STEP 5: TAMBAH grow() FUNCTION
+============================================
+
+Tambahkan function baru di akhir script:
+
+---COPY MULAI---
+
+func grow():
+    """
+    Ular bertambah 1 segment
+    Dipanggil saat ular makan
+    """
+    body_length += 1
+
+---COPY SELESAI---
+
+Penjelasan:
+- body_length += 1: tambah panjang 1
+- Saat move_snake(), jika body_segments.size() > body_length tidak tercapai
+- Jadi ekor tidak dihapus = ular tambah 1 segment
+
+============================================
+STEP 6: UPDATE _draw() FUNCTION
+============================================
+
+Ganti seluruh function _draw() dengan:
+
+---COPY MULAI---
+
+func _draw():
+    """
+    Gambar seluruh ular:
+    1. Kepala (merah)
+    2. Body segments (hijau)
+    """
+    # ===== GAMBAR KEPALA =====
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(head_rect, Color.RED)
+    
+    # ===== GAMBAR BODY =====
+    for segment in body_segments:
+        var segment_screen_pos = segment * GRID_SIZE
+        var segment_rect = Rect2(segment_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+        draw_rect(segment_rect, Color.GREEN)
+    
+    # draw_rect syntax:
+    # draw_rect(Rect2(pos, size), color)
+    # Rect2(pos, size) = rectangular area
+    # pos = Vector2(x, y) = top-left corner
+    # size = Vector2(width, height)
+
+---COPY SELESAI---
+
+Penjelasan:
+- Gambar kepala dulu (merah)
+- Loop setiap segment di body_segments
+- Gambar masing-masing sebagai kotak hijau
+- Result: kepala merah + badan hijau panjang
+
+============================================
+STEP 7: SAVE & TEST
+============================================
+
+1. Save script: Ctrl+S
+
+2. Jalankan game: F5
+
+3. Di game window:
+   - Lihat red square (kepala)
+   - Lihat 2 green squares di belakang (body)
+   - Tekan arrow keys
+   - Ular bergerak dengan ekornya!
+
+4. Tekan Esc untuk close
+
+✅ KESUKSESAN! Ular punya badan!
+
+============================================
+TESTING
+============================================
+
+Test 1: Ular terlihat dengan kepala + 2 body?
+   ➜ F5
+   ➜ Lihat: 1 red + 2 green squares
+   ✅ PASS
+
+Test 2: Ekor mengikuti kepala dengan benar?
+   ➜ Tekan arrow keys
+   ➜ Perhatikan body mengikuti kepala
+   ➜ Tidak ada segment yang hilang di tengah
+   ✅ PASS
+
+Test 3: Gerakan smooth?
+   ➜ Tekan tombol dan hold
+   ➜ Ular bergerak smooth
+   ✅ PASS
+
+Test 4: Tidak ada error?
+   ➜ Output console tidak ada error
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 5!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Body tidak terlihat
+   → Cek apakah body_segments punya value?
+   → Debug: print(body_segments) di _process() lihat output
+   → Cek _draw() code-nya benar
+
+❌ Ular bergerak aneh / body terputus
+   → Cek logic di move_snake()
+   → Pastikan body_segments.insert(0, snake_pos) di tempat yang benar
+   → Debug: print("Body size: ", body_segments.size())
+
+❌ Ular entah berapa panjang
+   → Cek body_length di script
+   → Pastikan _ready() di-jalankan (harus ada log di output)
+   → Cek logic di move_snake() apakah pop_back() bekerja
+
+❌ Warna tidak sesuai
+   → Ubah Color.RED dan Color.GREEN ke warna lain
+   → Contoh: Color.YELLOW, Color.BLUE, Color(1, 0.5, 0) untuk custom
+
+============================================
+SELESAI HARI 4!
+============================================
+
+Pengetahuan yang didapat:
+✅ Array dan cara menggunakannya
+✅ append() dan pop_back() untuk manage array
+✅ Loop dengan for...in
+✅ Insert di posisi spesifik
+✅ Logic untuk body following head
+
+Ular kalian sekarang punya badan! 🐍🐍🐍
+
+Next: Hari 5 - Membuat makanan dan scoring!
+
+================================================================================
+HARI 5: MAKANAN MUNCUL & SCORE SYSTEM
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Food spawner dengan random position
+   - Collision detection (ular ↔ makanan)
+   - Score system dengan update UI
+
+📝 PENJELASAN KONSEP:
+
+RANDOM POSITION:
+Kita butuh spawn makanan di posisi random di grid.
+randi() % grid_width = random integer 0 sampai grid_width-1
+
+COLLISION DETECTION:
+Cek jika snake_pos == food_pos
+Jika ya, ular makan!
+
+SCORE SYSTEM:
+- Variable score menyimpan skor
+- Update saat ular makan
+- Update UI Label dengan score terbaru
+
+============================================
+STEP 1: TAMBAH FOOD & SCORE VARIABLES
+============================================
+
+Di bagian "# ==========================================
+# SNAKE VARIABLES" tambahkan:
+
+---COPY MULAI---
+
+var food_pos = Vector2(15, 10)      # Posisi makanan
+var score = 0                       # Score pemain
+
+---COPY SELESAI---
+
+============================================
+STEP 2: TAMBAH SPAWN_FOOD() FUNCTION
+============================================
+
+Tambahkan function baru (bisa di mana saja, tapi bagus sebelum move_snake()):
+
+---COPY MULAI---
+
+func spawn_food():
+    """
+    Spawn makanan di posisi random
+    Pastikan tidak spawn di atas badan ular
+    
+    Return: Vector2 - posisi food yang valid
+    """
+    var valid = false
+    var new_pos = Vector2.ZERO  # Vector2.ZERO = Vector2(0, 0)
+    
+    # Loop sampai menemukan posisi yang valid
+    while not valid:
+        # Generate random position dalam grid
+        new_pos = Vector2(
+            randi() % GRID_WIDTH,
+            randi() % GRID_HEIGHT
+        )
+        
+        # Cek apakah posisi valid (tidak ada di body ular)
+        # "in" operator = cek apakah element ada di array
+        if new_pos not in body_segments and new_pos != snake_pos:
+            valid = true  # Posisi valid, keluar loop
+    
+    return new_pos
+
+---COPY SELESAI---
+
+Penjelasan:
+- while not valid: loop terus sampai valid = true
+- randi() % GRID_WIDTH: random int 0 sampai GRID_WIDTH-1
+- new_pos not in body_segments: cek posisi tidak ada di array
+- new_pos != snake_pos: cek posisi tidak sama dengan kepala
+- return new_pos: kembalikan posisi yang valid
+
+============================================
+STEP 3: INITIALIZE FOOD DI _ready()
+============================================
+
+Ubah _ready() menjadi:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Setup awal game
+    """
+    # Initialize body
+    for i in range(body_length):
+        var segment_pos = snake_pos - direction * i
+        body_segments.append(segment_pos)
+    
+    # Spawn makanan pertama
+    food_pos = spawn_food()
+
+---COPY SELESAI---
+
+============================================
+STEP 4: UPDATE move_snake() UNTUK DETECT MAKAN
+============================================
+
+Ubah move_snake() menjadi:
+
+---COPY MULAI---
+
+func move_snake():
+    """
+    Gerakkan ular dan cek collision dengan makanan
+    """
+    direction = next_direction
+    snake_pos += direction
+    body_segments.insert(0, snake_pos)
+    
+    # ===== CECK MAKAN =====
+    if snake_pos == food_pos:
+        # Ular makan!
+        score += 10
+        grow()
+        food_pos = spawn_food()
+        update_score_label()
+        # TODO: Jalankan sound effect makan (nanti di Hari 11)
+    else:
+        # Tidak makan, hapus ekor seperti biasa
+        if body_segments.size() > body_length:
+            body_segments.pop_back()
+
+---COPY SELESAI---
+
+Penjelasan:
+- if snake_pos == food_pos: cek apakah kepala mengenai makanan
+- score += 10: tambah skor 10 poin
+- grow(): tambah panjang ular
+- food_pos = spawn_food(): spawn makanan baru
+- update_score_label(): update UI label
+- else: jika tidak makan, hapus ekor seperti biasa
+
+============================================
+STEP 5: TAMBAH update_score_label() FUNCTION
+============================================
+
+Tambahkan function:
+
+---COPY MULAI---
+
+func update_score_label():
+    """
+    Update teks di UI Label dengan score terbaru
+    """
+    var score_label = $ScoreLabel  # $ = get_node()
+    score_label.text = "Score: " + str(score)
+    
+    # $ adalah shorthand untuk get_node()
+    # $ScoreLabel = get_node("ScoreLabel")
+    # label.text = ubah teks yang ditampilkan
+    # str(score) = konversi integer ke string
+
+---COPY SELESAI---
+
+Penjelasan:
+- $ScoreLabel: akses node child bernama "ScoreLabel"
+- .text: ubah text property
+- str(score): konversi angka ke string (untuk display)
+
+============================================
+STEP 6: UPDATE _draw() UNTUK GAMBAR MAKANAN
+============================================
+
+Ubah _draw() menjadi:
+
+---COPY MULAI---
+
+func _draw():
+    """
+    Gambar: kepala, body, dan makanan
+    """
+    # ===== GAMBAR KEPALA =====
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(head_rect, Color.RED)
+    
+    # ===== GAMBAR BODY =====
+    for segment in body_segments:
+        var segment_screen_pos = segment * GRID_SIZE
+        var segment_rect = Rect2(segment_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+        draw_rect(segment_rect, Color.GREEN)
+    
+    # ===== GAMBAR MAKANAN =====
+    var food_screen_pos = food_pos * GRID_SIZE
+    var food_rect = Rect2(food_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(food_rect, Color.YELLOW)
+
+---COPY SELESAI---
+
+============================================
+STEP 7: TAMBAH queue_redraw() DI move_snake()
+============================================
+
+Di move_snake(), setelah semua logic, pastikan ada:
+
+    queue_redraw()  # Redraw canvas setiap gerak
+
+Ini diperlukan supaya makanan dan skor ter-update di layar.
+
+============================================
+STEP 8: SAVE & TEST
+============================================
+
+1. Save script: Ctrl+S
+
+2. Jalankan game: F5
+
+3. Di game window:
+   - Lihat red square (kepala)
+   - Lihat green squares (body)
+   - Lihat yellow square (makanan)
+   - Lihat "Score: 0" di atas kiri
+   - Gerakkan ular ke makanan
+   - Ketika kepala menyentuh makanan:
+     * Skor bertambah 10
+     * Ular bertambah 1 segment
+     * Makanan spawn di posisi baru
+
+4. Tekan Esc untuk close
+
+✅ KESUKSESAN! Game sudah fun!
+
+============================================
+TESTING
+============================================
+
+Test 1: Makanan terlihat?
+   ➜ F5
+   ➜ Lihat yellow square di grid
+   ✅ PASS
+
+Test 2: Ular bisa makan makanan?
+   ➜ Tekan arrow untuk gerakkan ular ke makanan
+   ➜ Ketika kepala menyentuh: score naik, ular panjang
+   ✅ PASS
+
+Test 3: Score update di UI?
+   ➜ Cek label "Score: X" saat ular makan
+   ➜ Angka harus sesuai dengan jumlah makan
+   ✅ PASS
+
+Test 4: Makanan spawn di tempat baru?
+   ➜ Setelah makan, makanan harus pindah ke posisi random lain
+   ✅ PASS
+
+Test 5: Tidak ada error?
+   ➜ Output console bersih
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 6!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Makanan tidak terlihat
+   → Cek warna, mungkin sama dengan background
+   → Debug: print(food_pos) untuk lihat posisinya
+
+❌ Skor tidak update
+   → Cek apakah update_score_label() di-panggil
+   → Debug: print("Eating!") di dalam if snake_pos == food_pos
+
+❌ Ular tidak tumbuh saat makan
+   → Cek apakah grow() di-panggil
+   → Cek body_length variable
+
+❌ Makanan spawn di atas ular
+   → Seharusnya tidak terjadi (sudah ada cek di spawn_food)
+   → Jika tetap terjadi, cek logic "not in body_segments"
+
+❌ Game crash saat makan
+   → Cek output console untuk error message
+   → Kemungkinan: ScoreLabel tidak ada di scene
+   → Pastikan Label di Scene panel sudah dibuat (Hari 2)
+
+============================================
+SELESAI HARI 5!
+============================================
+
+Pengetahuan yang didapat:
+✅ Random number generation dengan randi()
+✅ Collision detection (sederhana)
+✅ Update UI dari script dengan .text
+✅ Conditional logic (if-else)
+✅ Function calls dan return values
+✅ Array membership checking dengan "in"
+
+Game sudah bisa makan dan score! 🎮
+
+Next: Hari 6 - Game over dan collision!
+
+================================================================================
+HARI 6: COLLISION DETECTION & GAME OVER
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Wall collision (nabrak dinding → game over)
+   - Self collision (nabrak badan sendiri → game over)
+   - Prevent 180° reverse (tidak bisa balik langsung)
+   - Game over state management
+   - Restart functionality
+
+📝 PENJELASAN KONSEP:
+
+WALL COLLISION:
+Jika snake_pos.x < 0 atau > GRID_WIDTH, ular out of bounds.
+Sama untuk Y axis.
+
+SELF COLLISION:
+Jika snake_pos ada di dalam body_segments array, ular nabrak diri sendiri.
+
+PREVENT REVERSE:
+Jika arah baru adalah 180° berlawanan arah sekarang, ignore input.
+Contoh: arah sekarang RIGHT (1, 0), input LEFT (-1, 0) → 1 + (-1) = 0 → reverse!
+Solusi: cek apakah direction.x + next_direction.x == 0, jika ya ignore.
+
+GAME OVER STATE:
+- Variable is_game_over untuk tracking state
+- Saat game over, hentikan movement
+- Tampilkan pesan (nanti di Hari 8)
+
+RESTART:
+- Saat tekan input tertentu, reload scene
+
+============================================
+STEP 1: TAMBAH GAME OVER STATE VARIABLE
+============================================
+
+Di bagian "# SNAKE VARIABLES" tambahkan:
+
+---COPY MULAI---
+
+var is_game_over = false
+
+---COPY SELESAI---
+
+============================================
+STEP 2: TAMBAH check_collision() FUNCTION
+============================================
+
+Tambahkan function baru:
+
+---COPY MULAI---
+
+func check_collision():
+    """
+    Cek apakah ular nabrak:
+    1. Dinding (out of bounds)
+    2. Badan sendiri (self collision)
+    
+    Jika ada, trigger game over
+    """
+    
+    # ===== WALL COLLISION =====
+    # Cek apakah posisi kepala out of grid bounds
+    if snake_pos.x < 0 or snake_pos.x >= GRID_WIDTH or \
+       snake_pos.y < 0 or snake_pos.y >= GRID_HEIGHT:
+        game_over()
+        return  # Exit function, jangan lanjut
+    
+    # ===== SELF COLLISION =====
+    # Cek apakah posisi kepala ada di body segments
+    # Loop dari index 1 (skip head), cek sisa body
+    for i in range(1, body_segments.size()):
+        if snake_pos == body_segments[i]:
+            game_over()
+            return
+
+---COPY SELESAI---
+
+Penjelasan:
+- if snake_pos.x < 0: kepala pindah ke x negatif (kiri boundary)
+- snake_pos.x >= GRID_WIDTH: kepala pindah ke x lebih besar grid (kanan boundary)
+- \ di akhir baris = line continuation (lanjut ke baris berikutnya)
+- range(1, body_segments.size()): loop dari index 1 (skip kepala)
+- return: exit function lebih awal (tidak perlu check lebih lanjut)
+
+============================================
+STEP 3: TAMBAH game_over() FUNCTION
+============================================
+
+Tambahkan function:
+
+---COPY MULAI---
+
+func game_over():
+    """
+    Handle saat ular mati
+    """
+    is_game_over = true
+    print("Game Over! Final Score: ", score)
+    # TODO: Nanti kita tampilkan game over screen (Hari 8)
+
+---COPY SELESAI---
+
+Penjelasan:
+- is_game_over = true: set flag game over
+- print(): output ke console untuk debug
+
+============================================
+STEP 4: UPDATE _process() UNTUK PREVENT REVERSE
+============================================
+
+Ubah input handling di _process() agar prevent reverse 180°:
+
+---COPY MULAI---
+
+# ===== HANDLE INPUT (SETIAP FRAME) =====
+
+if Input.is_action_pressed("ui_right"):
+    # Hanya ubah arah jika tidak berlawanan 180°
+    if direction != Vector2(-1, 0):  # direction bukan LEFT
+        next_direction = Vector2(1, 0)
+
+elif Input.is_action_pressed("ui_left"):
+    if direction != Vector2(1, 0):  # direction bukan RIGHT
+        next_direction = Vector2(-1, 0)
+
+elif Input.is_action_pressed("ui_down"):
+    if direction != Vector2(0, -1):  # direction bukan UP
+        next_direction = Vector2(0, 1)
+
+elif Input.is_action_pressed("ui_up"):
+    if direction != Vector2(0, 1):  # direction bukan DOWN
+        next_direction = Vector2(0, -1)
+
+---COPY SELESAI---
+
+Penjelasan:
+- direction != Vector2(-1, 0): cek arah sekarang bukan LEFT
+- Jika benar, izinkan ubah ke RIGHT
+- Begitu juga untuk arah lain
+- Ini prevent reverse 180° langsung (yang bikin mati instant)
+
+============================================
+STEP 5: UPDATE move_snake() UNTUK CHECK COLLISION
+============================================
+
+Ubah move_snake() menjadi:
+
+---COPY MULAI---
+
+func move_snake():
+    """
+    Gerakkan ular dan cek collision
+    """
+    direction = next_direction
+    snake_pos += direction
+    body_segments.insert(0, snake_pos)
+    
+    # ===== CHECK COLLISION =====
+    check_collision()
+    
+    # Jika sudah game over, hentikan logic lebih lanjut
+    if is_game_over:
+        return
+    
+    # ===== CHECK MAKAN =====
+    if snake_pos == food_pos:
+        score += 10
+        grow()
+        food_pos = spawn_food()
+        update_score_label()
+    else:
+        if body_segments.size() > body_length:
+            body_segments.pop_back()
+    
+    queue_redraw()
+
+---COPY SELESAI---
+
+Penjelasan:
+- check_collision(): panggil function collision checking
+- if is_game_over: return: jika game over, hentikan sini
+- Jadi sisa logic (makan, draw) tidak jalan saat game over
+
+============================================
+STEP 6: UPDATE _process() UNTUK STOP MOVEMENT SAAT GAME OVER
+============================================
+
+Ubah bagian timer di _process():
+
+---COPY MULAI---
+
+# ===== UPDATE TIMER =====
+move_timer += delta
+
+# ===== MOVE SNAKE SETIAP X DETIK =====
+if move_timer >= MOVE_SPEED and not is_game_over:
+    move_snake()
+    move_timer = 0.0
+
+---COPY SELESAI---
+
+Penjelasan:
+- "and not is_game_over": tambahan kondisi
+- Jadi movement hanya jalan jika game belum over
+
+============================================
+STEP 7: TAMBAH RESTART FUNCTIONALITY
+============================================
+
+Tambahkan di _process() di bagian input handling:
+
+---COPY MULAI---
+
+# ===== HANDLE INPUT (SETIAP FRAME) =====
+
+# Restart game saat tekan SPACE
+if is_game_over and Input.is_action_pressed("ui_accept"):
+    get_tree().reload_current_scene()
+
+# ... rest of input handling ...
+
+---COPY SELESAI---
+
+Penjelasan:
+- Input.is_action_pressed("ui_accept"): cek tombol SPACE
+- get_tree().reload_current_scene(): reload scene (restart)
+
+============================================
+STEP 8: SAVE & TEST
+============================================
+
+1. Save script: Ctrl+S
+
+2. Jalankan game: F5
+
+3. Test collision:
+   - Gerakkan ular ke dinding
+   - Ular harus game over (tidak bergerak lagi)
+   - Console seharusnya print "Game Over! Final Score: X"
+
+4. Test self collision:
+   - Gerakkan ular membuat spiral/circle
+   - Ketika kepala nabrak badan, game over
+
+5. Test prevent reverse:
+   - Gerakkan RIGHT
+   - Cepat tekan LEFT
+   - Ular tidak langsung reverse (akan gerak UP/DOWN next)
+
+6. Test restart:
+   - Saat game over, tekan SPACE
+   - Game reload, mulai fresh
+
+7. Tekan Esc untuk close
+
+✅ KESUKSESAN! Game sudah complete!
+
+============================================
+TESTING
+============================================
+
+Test 1: Wall collision works?
+   ➜ Gerakkan ular ke tepi grid
+   ➜ Saat out of bounds → game over
+   ✅ PASS
+
+Test 2: Self collision works?
+   ➜ Buatular bergerak melingkar
+   ➜ Saat kepala nabrak badan → game over
+   ✅ PASS
+
+Test 3: Prevent reverse 180°?
+   ➜ Gerakkan RIGHT
+   ➜ Tekan LEFT langsung
+   ➜ Ular tidak langsung reverse (masih gerak RIGHT atau ubah ke UP/DOWN)
+   ✅ PASS
+
+Test 4: Restart works?
+   ➜ Game over (dengan tekan SPACE)
+   ➜ Scene reload, ular reset ke posisi awal
+   ➜ Score reset ke 0
+   ✅ PASS
+
+Test 5: Output console?
+   ➜ Saat game over, lihat "Game Over! Final Score: X"
+   ✅ PASS
+
+Jika semua PASS, Minggu 1 SELESAI! 🎉
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Game over tidak trigger saat nabrak dinding
+   → Cek logic di check_collision()
+   → Debug: print("Checking collision") di awal function
+   → Cek apakah GRID_WIDTH dan GRID_HEIGHT benar (20, 15)
+
+❌ Game over trigger tapi ular masih bergerak
+   → Cek apakah "and not is_game_over" di _process()
+   → Pastikan return di move_snake() setelah check_collision()
+
+❌ Self collision tidak berjalan
+   → Cek loop di check_collision(), pastikan range(1, ...) bukan range(0, ...)
+   → Debug: print("Body size: ", body_segments.size())
+
+❌ Reverse prevention tidak bekerja
+   → Cek direction comparison logic
+   → Debug: print("Direction: ", direction, "Next: ", next_direction)
+
+❌ SPACE tidak restart game
+   → Pastikan "ui_accept" dikonfigurasi (default: SPACE)
+   → Cek apakah is_game_over = true saat game over
+
+============================================
+SELESAI HARI 6!
+============================================
+
+Pengetahuan yang didapat:
+✅ Collision detection (wall dan self)
+✅ Game state management (is_game_over)
+✅ Logic untuk prevent reverse direction
+✅ Scene reloading untuk restart
+✅ Early exit dengan return
+
+Minggu 1 SELESAI! Ular sudah playable! 🐍🎮
+
+Next: Hari 7 - Polish dan playtesting!
+
+================================================================================
+HARI 7: RECAP MINGGU 1 & POLISH
+================================================================================
+
+⏱️ WAKTU: 1-2 jam
+🎯 TUJUAN:
+   - Playtesting menyeluruh
+   - Fix bug kecil
+   - Ensure smooth game flow
+
+📝 CHECKLIST PLAYTESTING:
+
+Game sudah playable sekarang! Mari test semuanya:
+
+GAMEPLAY:
+☐ Movement smooth? (tidak lag / jerky)
+☐ Input responsive? (tombol langsung bergerak)
+☐ Movement speed comfortable? (tidak terlalu cepat/lambat)
+☐ Ular pertama kali makan berhasil?
+☐ Ular tumbuh dengan benar?
+
+COLLISION:
+☐ Wall collision trigger kapan ular keluar grid?
+☐ Self collision trigger ketika kepala nabrak badan?
+☐ Prevent reverse 180° bekerja?
+
+GAME OVER:
+☐ Game over event trigger?
+☐ Ular stop bergerak saat game over?
+☐ Restart dengan SPACE bekerja?
+
+VISUAL:
+☐ Kepala merah terlihat?
+☐ Body hijau terlihat?
+☐ Makanan kuning terlihat?
+☐ Score label terlihat dan update?
+
+STABILITY:
+☐ No crash?
+☐ No infinite loops?
+☐ Console output clean (no error)?
+
+============================================
+STEP 1: INTENSIVE PLAYTESTING
+============================================
+
+Mainkan game minimal 5 kali:
+
+Game 1: Main sampai game over
+- Cek apakah semua feature bekerja
+- Perhatikan feel dan gameplay
+
+Game 2: Main fokus pada movement
+- Test movement smooth?
+- Test responsiveness
+- Test speed comfortable?
+
+Game 3: Main fokus pada collision
+- Deliberately nabrak dinding
+- Deliberately nabrak badan sendiri
+- Test prevent reverse
+
+Game 4: Main fokus pada eating
+- Makan makanan berkali-kali
+- Lihat skor naik
+- Lihat ular tumbuh
+
+Game 5: Check edge cases
+- Gerakkan ular ke corner
+- Gerakkan cepat / lambat
+- Test extreme scenarios
+
+Catat setiap bug yang ditemukan di notepad.
+
+============================================
+STEP 2: BUG TRACKING
+============================================
+
+Jika menemukan bug, catat dengan format:
+
+BUG #N: [Deskripsi singkat]
+- Severity: High / Medium / Low
+- How to reproduce: [Langkah-langkah]
+- Expected: [Apa yang seharusnya terjadi]
+- Actual: [Apa yang terjadi sekarang]
+- Possible fix: [Ide solusi]
+
+Contoh:
+BUG #1: Ular melintasi makanan tanpa makan
+- Severity: High
+- How to reproduce: Gerakkan ular ke makanan dengan cepat, 
+  kadang tidak register makan
+- Expected: Skor naik saat kepala touch makanan
+- Actual: Kadang kepala lintasi makanan tanpa ada interaksi
+- Possible fix: Cek collision logic, mungkin timing issue
+
+============================================
+STEP 3: COMMON BUGS & FIXES
+============================================
+
+BUG POTENTIAL #1: Movement terlalu cepat/lambat
+FIX: Ubah MOVE_SPEED di script
+- Lebih kecil = lebih cepat (contoh: 0.10)
+- Lebih besar = lebih lambat (contoh: 0.20)
+- Default: 0.15
+
+BUG POTENTIAL #2: Makanan spawn di atas ular
+FIX: Check spawn_food() logic
+- Seharusnya ada pengecekan "not in body_segments"
+- Jika masih terjadi, mungkin timing issue
+
+BUG POTENTIAL #3: Skor tidak update
+FIX: Check update_score_label()
+- Pastikan function di-panggil
+- Pastikan ScoreLabel node ada di scene
+
+BUG POTENTIAL #4: Game tidak restart dengan SPACE
+FIX: Check _process() input handling
+- Pastikan "is_game_over and Input.is_action_pressed("ui_accept")"
+- Pastikan "ui_accept" dikonfigurasi (default: SPACE)
+
+============================================
+STEP 4: OPTIMIZATION TIPS
+============================================
+
+Jika game terlalu cepat:
+➜ Naikkan MOVE_SPEED (contoh: 0.20)
+➜ Ini memberi waktu pemain react
+
+Jika game terlalu lambat:
+➜ Turunkan MOVE_SPEED (contoh: 0.10)
+
+Jika merasa ada lag:
+➜ Cek console untuk error
+➜ Cek apakah spawn_food() loop terlalu lama
+➜ (Unlikely untuk grid 20x15, tapi mungkin)
+
+Jika visual tidak bagus:
+➜ Ubah ukuran grid (GRID_SIZE = 32)
+➜ Ubah ukuran canvas (GameBoard 640x480)
+➜ Ubah warna di _draw()
+
+============================================
+STEP 5: PLAYTEST OUTPUT
+============================================
+
+Setelah playtesting, buat report:
+
+PLAYTEST REPORT - DAY 7
+
+Total plays: 5
+Average game duration: X minutes
+Bugs found: N
+
+Functionality Status:
+✅ Movement - Working
+✅ Input handling - Working
+✅ Eating mechanic - Working
+✅ Growing mechanic - Working
+✅ Collision detection - Working
+✅ Game over - Working
+✅ Restart - Working
+✅ Score display - Working
+
+Known issues:
+- [List bugs found]
+
+Gameplay feel:
+- Movement speed: [Good/Too fast/Too slow]
+- Input responsiveness: [Good/Laggy]
+- Visual clarity: [Good/Confusing]
+
+Ready for Minggu 2? YES / NO
+
+============================================
+STEP 6: PREPARE FOR WEEK 2
+============================================
+
+Jika semua test PASS:
+
+✅ Gameplay core sudah solid
+✅ No critical bugs
+✅ Ready untuk menu dan UI scenes
+
+Jika ada critical bug:
+⚠️ Fix dulu sebelum lanjut Week 2
+⚠️ Cek troubleshooting di Hari 6
+
+============================================
+SELESAI HARI 7!
+============================================
+
+Pengetahuan yang didapat:
+✅ Systematic playtesting methodology
+✅ Bug tracking dan documentation
+✅ Game feel dan balance considerations
+✅ Testing edge cases
+
+Minggu 1 LENGKAP! 🎉
+
+Minggu 2 dimulai dengan:
+Hari 8: Menu Utama & Game Over Screen
+Hari 9: High Score System
+Hari 10: Visual Upgrade
+Hari 11: Sound Effects
+Hari 12: Final Playtesting
+Hari 13: Showcase Content
+Hari 14: PRESENTASI! 🚀
+
+================================================================================
+
+NOTE UNTUK DAYS 8-14:
+
+Dokumentasi untuk Hari 8-14 akan sangat panjang jika semua dijelaskan detail.
+Panduan di atas (Hari 1-7) sudah memberikan fondasi yang cukup.
+
+Untuk Hari 8-14:
+1. Follow konsep yang sama (functions, variables, draw)
+2. Setiap hari tambah fitur baru (scene, save/load, audio, dll)
+3. Gunakan penjelasan Hari 1-7 sebagai referensi
+4. Konsultasikan dokumentasi Godot jika stuck: https://docs.godotengine.org/
+
+KEY POINTS WEEK 2:
+
+HARI 8: Scene transitions
+- Buat MainMenu.tscn dan GameOver.tscn
+- Gunakan get_tree().change_scene_to_file()
+
+HARI 9: Save/Load system
+- Gunakan FileAccess untuk persistent data
+- Save high score ke file
+
+HARI 10: Visuals
+- Ubah ColorRect jadi Sprite2D (atau pakai modulation color)
+- Add background grid
+- Pilih color palette
+
+HARI 11: Audio
+- Download sound effect dari OpenGameArt.org
+- Gunakan AudioStreamPlayer node
+- Play sound saat makan, game over
+
+HARI 12: Final testing
+- Playtesting serius
+- Fix semua bug yang ditemukan
+- Jangan tambah fitur baru
+
+HARI 13: Showcase
+- Record full gameplay video
+- Prepare presentation content
+
+HARI 14: PRESENTASI
+- Present game to audience
+- Celebrate! 🎉
+
+================================================================================
+END OF TUTORIAL
+================================================================================
+
+Selamat belajar! Kalian bisa membuat game! 🚀🐍
+
+Questions atau stuck? 
+- Cek Troubleshooting section
+- Lihat output console untuk error message
+- Konsultasikan Godot docs
+- Atau tanya di Godot community forum
+
+Semoga sukses! 🎮✨

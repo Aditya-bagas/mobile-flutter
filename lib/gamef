@@ -1,0 +1,105 @@
+wajah roblox
+extends Node2D
+
+# ==========================================
+# GAME CONSTANTS
+# ==========================================
+var GRID_SIZE = 32          # Ukuran tiap cell dalam pixel
+var GRID_WIDTH = 20         # Jumlah cell horizontal (640 / 32 = 20)
+var GRID_HEIGHT = 15        # Jumlah cell vertikal (480 / 32 = 15)
+
+# ==========================================
+# SNAKE VARIABLES
+# ==========================================
+var snake_pos = Vector2(10, 10)      # Posisi ular di grid (mulai tengah)
+var direction = Vector2(1, 0)        # Arah sekarang (bergerak kanan)
+var next_direction = Vector2(1, 0)   # Input untuk frame depan
+
+# ==========================================
+# MAIN FUNCTIONS
+# ==========================================
+
+func _ready():
+    """
+    _ready() dipanggil saat scene start
+    Kita gunakan untuk setup awal game
+    """
+    pass  # Untuk sekarang, tidak ada setup khusus
+
+func _process(delta):
+    """
+    _process() dipanggil setiap frame (~60 fps)
+    delta = waktu (detik) sejak frame terakhir
+    
+    Kita gunakan untuk:
+    1. Tangkap input keyboard
+    2. Update timer movement
+    3. Jalankan movement jika timer cukup
+    """
+    
+    # ===== HANDLE INPUT (SETIAP FRAME) =====
+    # Cek tombol keyboard dan update next_direction
+    
+    if Input.is_action_pressed("ui_right"):
+        # Jika tombol kanan ditekan, dan ular tidak sedang bergerak kiri
+        # (prevent reverse 180° - akan explain nanti)
+        if direction != Vector2(-1, 0):
+            next_direction = Vector2(1, 0)
+    
+    elif Input.is_action_pressed("ui_left"):
+        if direction != Vector2(1, 0):
+            next_direction = Vector2(-1, 0)
+    
+    elif Input.is_action_pressed("ui_down"):
+        if direction != Vector2(0, -1):
+            next_direction = Vector2(0, 1)
+    
+    elif Input.is_action_pressed("ui_up"):
+        if direction != Vector2(0, 1):
+            next_direction = Vector2(0, -1)
+    
+    # ===== UPDATE TIMER =====
+    # Tambahkan delta ke timer setiap frame
+    move_timer += delta
+    
+    # ===== MOVE SNAKE SETIAP X DETIK =====
+    # Jika timer sudah >= MOVE_SPEED, ular bergerak
+    if move_timer >= MOVE_SPEED:
+        move_snake()           # Jalankan movement
+        move_timer = 0.0       # Reset timer
+        queue_redraw()         # Redraw canvas (akan explain di draw)
+
+# ===== MOVEMENT FUNCTION =====
+
+func move_snake():
+    """
+    move_snake() menggerakkan ular sesuai arah
+    Dipanggil setiap MOVE_SPEED detik
+    """
+    # Update arah dengan input terbaru
+    direction = next_direction
+    
+    # Pindahkan ular ke cell sebelah sesuai direction
+    # direction adalah Vector2(1,0) / (-1,0) / (0,1) / (0,-1)
+    # Jadi snake_pos berubah 1 cell per gerak
+    snake_pos += direction
+    
+    # TODO: Nanti kita akan tambah:
+    # - Cek collision (nabrak dinding, nabrak badan)
+    # - Cek makan (collision dengan makanan)
+    # - Draw body segments (ekor ular)
+
+# ===== DRAW FUNCTION =====
+
+func _draw():
+    """
+    _draw() dipanggil setiap frame untuk menggambar
+    Ini tempat kita render snake, makanan, dll
+    """
+    # Gambar ular sebagai kotak merah di posisi snake_pos
+    # Konversi dari grid position ke pixel position
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    
+    # draw_rect(area, color)
+    draw_rect(head_rect, Color.RED)
