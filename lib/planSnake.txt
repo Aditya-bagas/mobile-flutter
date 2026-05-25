@@ -1847,61 +1847,2732 @@ Hari 13: Showcase Content
 Hari 14: PRESENTASI! 🚀
 
 ================================================================================
-
-NOTE UNTUK DAYS 8-14:
-
-Dokumentasi untuk Hari 8-14 akan sangat panjang jika semua dijelaskan detail.
-Panduan di atas (Hari 1-7) sudah memberikan fondasi yang cukup.
-
-Untuk Hari 8-14:
-1. Follow konsep yang sama (functions, variables, draw)
-2. Setiap hari tambah fitur baru (scene, save/load, audio, dll)
-3. Gunakan penjelasan Hari 1-7 sebagai referensi
-4. Konsultasikan dokumentasi Godot jika stuck: https://docs.godotengine.org/
-
-KEY POINTS WEEK 2:
-
-HARI 8: Scene transitions
-- Buat MainMenu.tscn dan GameOver.tscn
-- Gunakan get_tree().change_scene_to_file()
-
-HARI 9: Save/Load system
-- Gunakan FileAccess untuk persistent data
-- Save high score ke file
-
-HARI 10: Visuals
-- Ubah ColorRect jadi Sprite2D (atau pakai modulation color)
-- Add background grid
-- Pilih color palette
-
-HARI 11: Audio
-- Download sound effect dari OpenGameArt.org
-- Gunakan AudioStreamPlayer node
-- Play sound saat makan, game over
-
-HARI 12: Final testing
-- Playtesting serius
-- Fix semua bug yang ditemukan
-- Jangan tambah fitur baru
-
-HARI 13: Showcase
-- Record full gameplay video
-- Prepare presentation content
-
-HARI 14: PRESENTASI
-- Present game to audience
-- Celebrate! 🎉
-
-================================================================================
-END OF TUTORIAL
+HARI 8: MAIN MENU & SCENE TRANSITIONS
 ================================================================================
 
-Selamat belajar! Kalian bisa membuat game! 🚀🐍
+⏱️ WAKTU: 3-4 jam
+🎯 TUJUAN:
+   - Buat MainMenu scene dengan Button Play
+   - Buat GameOver scene untuk tampil saat ular mati
+   - Scene transitions yang smooth (Game → Menu → Game)
+   - Setup main scene di Project Settings
 
-Questions atau stuck? 
-- Cek Troubleshooting section
-- Lihat output console untuk error message
-- Konsultasikan Godot docs
-- Atau tanya di Godot community forum
+📝 PENJELASAN KONSEP:
 
-Semoga sukses! 🎮✨
+MULTIPLE SCENES:
+Di Godot, game bisa punya banyak scene terpisah:
+- MainMenu.tscn: tampilan menu
+- Game.tscn: gameplay
+- GameOver.tscn: tampilan game over
+
+SCENE TRANSITIONS:
+Pindah antar scene pakai:
+- get_tree().change_scene_to_file("path/to/scene.tscn")
+- get_tree().reload_current_scene() untuk restart
+
+NODES UNTUK UI:
+- Button: tombol clickable
+- VBoxContainer: arrange nodes vertikal otomatis
+- Panel: background untuk UI
+- Label: text display
+
+============================================
+STEP 1: BUAT MAIN MENU SCENE
+============================================
+
+1. Di Godot editor, buka FileSystem (folder icon)
+2. Klik kanan di folder scenes/
+3. Pilih "New Resource" → Scene
+4. Ganti nama jadi "MainMenu"
+
+Atau manual:
+1. Klik "+" untuk new scene
+2. Pilih Node2D sebagai root
+3. Di Scene panel, klik kanan "Node2D"
+4. Pilih "Save Branch as Scene"
+5. Path: res://scenes/MainMenu.tscn
+6. Klik Save
+
+Sekarang rename root node dari "Node2D" ke "MainMenu".
+
+============================================
+STEP 2: SETUP MAINMENU LAYOUT
+============================================
+
+1. Di Scene panel, select MainMenu node
+
+2. Add child node: Control
+   - Control adalah base class untuk UI
+   - Ini akan menjadi container untuk buttons
+
+3. Di INSPECTOR (kanan), set properties Control:
+   - Layout Mode: Full Rect (atau atur manual)
+   - Position: X=0, Y=0
+   - Size: X=1280, Y=720 (sesuai resolusi game)
+   - Color: bisa white atau pilih warna background
+   - Rename ke "UIContainer"
+
+4. Add child node ke UIContainer: Panel
+   - Ini untuk background visual
+   - Set Name: "Background"
+   - Set Size: X=1280, Y=720
+   - Set Color: white / light gray (pilih warna)
+   - Anchor Preset: Full Rect (agar stretch sesuai ukuran)
+
+5. Add child node ke UIContainer: VBoxContainer
+   - VBoxContainer otomatis arrange child nodes vertikal
+   - Set Name: "ButtonContainer"
+   - Anchor Preset: Center
+   - Size: X=300, Y=300 (untuk buttons)
+   - Position: Tengah screen (cek di viewport)
+   - Separation: 20 (jarak antar button)
+
+============================================
+STEP 3: ADD BUTTONS KE MAINMENU
+============================================
+
+1. Di Scene panel, select "ButtonContainer" (VBoxContainer)
+
+2. Add child node: Button
+   - Set Name: "PlayButton"
+   - Set Text: "PLAY"
+   - Gunakan layout untuk auto-size (set Expand Mode: Fit Width/Height)
+
+3. Add child node: Button (lagi)
+   - Set Name: "HighScoreButton"
+   - Set Text: "HIGH SCORES"
+
+4. Add child node: Button (lagi)
+   - Set Name: "ExitButton"
+   - Set Text: "EXIT"
+
+Sekarang MainMenu structure akan jadi:
+  MainMenu (Node2D)
+  └─ UIContainer (Control)
+     ├─ Background (Panel)
+     └─ ButtonContainer (VBoxContainer)
+        ├─ PlayButton
+        ├─ HighScoreButton
+        └─ ExitButton
+
+============================================
+STEP 4: ADD TITLE LABEL
+============================================
+
+1. Select UIContainer (Control)
+
+2. Add child node: Label
+   - Set Name: "TitleLabel"
+   - Set Text: "SNAKE GAME"
+   - Set Font Size: 80 (agar besar)
+   - Set Position: Atas tengah (misal X=400, Y=50)
+   - Set Color: warna contrast (misal hitam)
+   - Set Alignment: Center
+
+============================================
+STEP 5: ATTACH SCRIPT KE MAINMENU
+============================================
+
+1. Select MainMenu node
+
+2. Attach script:
+   - Path: res://scripts/MainMenu.gd
+   - Template: Default
+   - Create
+
+3. Copy code ini:
+
+---COPY MULAI---
+
+extends Node2D
+
+func _ready():
+    """
+    Saat MainMenu start, setup button connections
+    """
+    # Connect buttons ke functions
+    $UIContainer/ButtonContainer/PlayButton.pressed.connect(_on_play_pressed)
+    $UIContainer/ButtonContainer/HighScoreButton.pressed.connect(_on_highscore_pressed)
+    $UIContainer/ButtonContainer/ExitButton.pressed.connect(_on_exit_pressed)
+
+func _on_play_pressed():
+    """
+    Saat Play button diklik, pindah ke Game scene
+    """
+    get_tree().change_scene_to_file("res://scenes/Game.tscn")
+
+func _on_highscore_pressed():
+    """
+    Tampilkan high score (nanti di hari 9)
+    """
+    print("High Score: TBD")
+    # TODO: Tampilkan high score dialog
+
+func _on_exit_pressed():
+    """
+    Keluar dari game
+    """
+    get_tree().quit()
+
+---COPY SELESAI---
+
+Penjelasan:
+- _ready(): dipanggil saat scene start
+- .pressed.connect(): connect button signal ke function
+- get_tree().change_scene_to_file(): pindah scene
+- get_tree().quit(): keluar app
+
+============================================
+STEP 6: SETUP GAME SCENE TRANSITIONS
+============================================
+
+1. Buka res://scripts/Game.gd (script dari Hari 6)
+
+2. Di function game_over(), ubah menjadi:
+
+---COPY MULAI---
+
+func game_over():
+    """
+    Handle saat ular mati
+    """
+    is_game_over = true
+    print("Game Over! Final Score: ", score)
+    
+    # Simpan score ke global variable (untuk GameOver scene)
+    # Kita akan buat global script nanti di Hari 9
+    # Untuk sekarang, cukup print
+    
+    # Transition ke GameOver scene setelah delay
+    await get_tree().create_timer(1.0).timeout
+    get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
+---COPY SELESAI---
+
+Penjelasan:
+- await get_tree().create_timer(1.0).timeout: tunggu 1 detik
+- Ini memberi waktu pemain lihat game over
+- Terus baru transition ke GameOver scene
+
+3. Update input handling (di _process):
+   - Hapus restart functionality (get_tree().reload_current_scene())
+   - Karena sekarang kita pindah ke GameOver scene
+
+---COPY MULAI---
+
+# HAPUS bagian ini dari _process():
+
+# Restart game saat tekan SPACE
+if is_game_over and Input.is_action_pressed("ui_accept"):
+    get_tree().reload_current_scene()
+
+---COPY SELESAI---
+
+============================================
+STEP 7: BUAT GAMEOVER SCENE
+============================================
+
+1. Buat scene baru (sama seperti MainMenu):
+   - Root: Node2D
+   - Save sebagai: res://scenes/GameOver.tscn
+   - Rename root ke: "GameOver"
+
+2. Add structure:
+   GameOver (Node2D)
+   └─ UIContainer (Control)
+      ├─ Background (Panel)
+      └─ ContentBox (VBoxContainer)
+         ├─ TitleLabel ("GAME OVER")
+         ├─ ScoreLabel ("Score: 0")
+         ├─ ButtonContainer (VBoxContainer)
+         │  ├─ RestartButton ("RESTART")
+         │  └─ MenuButton ("MAIN MENU")
+
+3. Setup properties:
+   - Background: Full screen, putih
+   - TitleLabel: Font size 80, hitam, tengah
+   - ScoreLabel: Font size 40, hitam, tengah, text "Score: 0"
+   - Buttons: Normal buttons seperti MainMenu
+
+============================================
+STEP 8: ATTACH SCRIPT KE GAMEOVER
+============================================
+
+1. Select GameOver node
+
+2. Attach script:
+   - Path: res://scripts/GameOver.gd
+   - Template: Default
+
+3. Copy code:
+
+---COPY MULAI---
+
+extends Node2D
+
+func _ready():
+    """
+    Saat GameOver scene start
+    """
+    # Connect buttons
+    $UIContainer/ContentBox/ButtonContainer/RestartButton.pressed.connect(_on_restart_pressed)
+    $UIContainer/ContentBox/ButtonContainer/MenuButton.pressed.connect(_on_menu_pressed)
+    
+    # Update score label (nanti kita implement proper way di Hari 9)
+    # Untuk sekarang, hardcode test score
+    var score_label = $UIContainer/ContentBox/ScoreLabel
+    score_label.text = "Score: 0"  # TODO: Dapatkan dari Game.gd
+
+func _on_restart_pressed():
+    """
+    Restart game dari awal
+    """
+    get_tree().change_scene_to_file("res://scenes/Game.tscn")
+
+func _on_menu_pressed():
+    """
+    Kembali ke main menu
+    """
+    get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+
+---COPY SELESAI---
+
+============================================
+STEP 9: SET MAIN SCENE
+============================================
+
+1. Buka Project Settings:
+   - Menu: Project → Project Settings
+   - Tab: General → Run
+   - Main Scene: res://scenes/MainMenu.tscn
+
+Sekarang saat F5, game akan start dari MainMenu!
+
+============================================
+STEP 10: SAVE & TEST
+============================================
+
+1. Save semua scenes dan scripts:
+   - Ctrl+S di setiap tab
+   - Atau File → Save All
+
+2. Jalankan game: F5
+
+3. Test flow:
+   - MainMenu muncul
+   - Klik PLAY → Game scene start
+   - Mainkan sampai game over
+   - GameOver scene tampil
+   - Klik RESTART → Game start fresh
+   - Klik MAIN MENU → Back to MainMenu
+   - Klik EXIT → Game close
+
+✅ KESUKSESAN! Full scene transitions working!
+
+============================================
+TESTING
+============================================
+
+Test 1: MainMenu scene muncul saat start?
+   ➜ F5
+   ➜ Lihat MainMenu dengan 3 buttons
+   ✅ PASS
+
+Test 2: Play button transition ke Game?
+   ➜ Klik PLAY
+   ➜ Game scene start
+   ✅ PASS
+
+Test 3: Game start fresh saat di PLAY?
+   ➜ Score = 0
+   ➜ Ular di posisi awal
+   ✅ PASS
+
+Test 4: Game over trigger pindah ke GameOver?
+   ➜ Mainkan sampai game over
+   ➜ Setelah 1 detik, GameOver scene muncul
+   ✅ PASS
+
+Test 5: RESTART button works?
+   ➜ Di GameOver, klik RESTART
+   ➜ Back to Game scene, fresh start
+   ✅ PASS
+
+Test 6: MAIN MENU button works?
+   ➜ Di GameOver, klik MAIN MENU
+   ➜ Back to MainMenu scene
+   ✅ PASS
+
+Test 7: EXIT button works?
+   ➜ Di MainMenu, klik EXIT
+   ➜ Game close
+   ✅ PASS
+
+Test 8: Tidak ada error?
+   ➜ Console clean
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 9!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ MainMenu tidak muncul saat start
+   → Cek Project Settings → Main Scene
+   → Pastikan path: res://scenes/MainMenu.tscn
+
+❌ Button tidak responsive
+   → Cek di _ready(), apakah .pressed.connect() benar
+   → Debug: print("Button clicked!") di function
+   → Cek button path correct: $UIContainer/ButtonContainer/PlayButton
+
+❌ Scene transition blank/error
+   → Cek console untuk error message
+   → Pastikan scene file path benar
+   → Pastikan scene saved properly
+
+❌ GameOver tidak tampil saat game over
+   → Cek apakah game_over() function updated
+   → Debug: print("Going to GameOver!") sebelum change_scene
+
+❌ Score tidak tampil di GameOver
+   → Ini expected (nanti di Hari 9)
+   → Untuk sekarang, hardcode aja test score
+
+============================================
+SELESAI HARI 8!
+============================================
+
+Pengetahuan yang didapat:
+✅ Multiple scenes management
+✅ Scene transitions dengan change_scene_to_file()
+✅ UI nodes: Button, VBoxContainer, Panel, Label
+✅ Signal connections (.pressed.connect())
+✅ Button event handling
+✅ Project main scene setup
+
+Minggu 2 dimulai! Sekarang punya full menu system! 🎮
+
+Next: Hari 9 - High score persistence!
+
+================================================================================
+HARI 9: HIGH SCORE PERSISTENCE (SAVE/LOAD)
+================================================================================
+
+⏱️ WAKTU: 3-4 jam
+🎯 TUJUAN:
+   - Buat AutoLoad (Singleton) untuk score management
+   - Save high score ke file dengan FileAccess & JSON
+   - Load high score saat game start
+   - Display high score di MainMenu & GameOver
+
+📝 PENJELASAN KONSEP:
+
+AUTOLOAD (SINGLETON):
+AutoLoad adalah script yang auto-load sebelum scene manapun.
+Cocok untuk global state yang perlu persist across scenes.
+Contoh: ScoreManager, AudioManager, GameConfig, dll
+
+FILE SYSTEM:
+- res:// = project folder (read-only saat runtime)
+- user:// = user data folder (bisa write)
+- FileAccess: API untuk read/write file
+
+JSON:
+- Format text untuk store data
+- Contoh: {"score": 100, "level": 5}
+- JSON.stringify() → convert dict ke string
+- JSON.parse_string() → convert string ke dict
+
+FLOW:
+Game end → save high score → next session load → display
+
+============================================
+STEP 1: BUAT SCOREMANAGER AUTOLOAD
+============================================
+
+1. Buat file baru:
+   - Path: res://scripts/ScoreManager.gd
+   - Type: GDScript
+
+2. Copy code:
+
+---COPY MULAI---
+
+extends Node
+
+# ==========================================
+# SCORE VARIABLES
+# ==========================================
+var high_score = 0
+var current_score = 0
+var save_path = "user://highscore.json"
+
+# ==========================================
+# AUTOLOAD INITIALIZATION
+# ==========================================
+
+func _ready():
+    """
+    AutoLoad _ready dipanggil saat Godot start
+    (sebelum scene manapun)
+    """
+    load_high_score()
+    print("ScoreManager initialized. High Score: ", high_score)
+
+# ==========================================
+# LOAD FUNCTION
+# ==========================================
+
+func load_high_score():
+    """
+    Load high score dari file user://highscore.json
+    Jika file tidak ada, set high_score = 0
+    """
+    # Cek apakah file ada
+    if FileAccess.file_exists(save_path):
+        # Baca file sebagai string
+        var json_string = FileAccess.get_file_as_string(save_path)
+        
+        # Parse JSON string ke dictionary
+        var data = JSON.parse_string(json_string)
+        
+        # Extract score dari dictionary
+        if data and "score" in data:
+            high_score = data["score"]
+            print("Loaded high score: ", high_score)
+        else:
+            high_score = 0
+            print("Invalid save file, reset high score")
+    else:
+        # File tidak ada, first time play
+        high_score = 0
+        print("No save file found. High score: 0")
+
+# ==========================================
+# SAVE FUNCTION
+# ==========================================
+
+func save_high_score(score):
+    """
+    Save high score jika score baru > high score lama
+    
+    Args:
+        score: current game score
+    """
+    # Cek apakah score baru lebih tinggi
+    if score > high_score:
+        high_score = score
+        
+        # Buat dictionary dengan data
+        var data = {"score": high_score}
+        
+        # Convert ke JSON string
+        var json_string = JSON.stringify(data)
+        
+        # Buka file untuk write
+        var file = FileAccess.open(save_path, FileAccess.WRITE)
+        
+        # Write string ke file
+        file.store_string(json_string)
+        
+        print("New high score saved: ", high_score)
+    else:
+        print("Current score (", score, ") not higher than high score (", high_score, ")")
+
+# ==========================================
+# GETTER FUNCTIONS
+# ==========================================
+
+func get_high_score() -> int:
+    """
+    Return high score
+    """
+    return high_score
+
+func set_current_score(score: int):
+    """
+    Set current score (untuk track per session)
+    """
+    current_score = score
+
+---COPY SELESAI---
+
+============================================
+STEP 2: REGISTER SCOREMANAGER DI AUTOLOAD
+============================================
+
+1. Buka Project Settings:
+   - Menu: Project → Project Settings
+   - Tab: AutoLoad (paling atas)
+
+2. Add AutoLoad:
+   - Node Path: res://scripts/ScoreManager.gd
+   - Node Name: ScoreManager
+   - Klik "Add"
+
+Sekarang ScoreManager otomatis load dan accessible dari mana saja!
+
+============================================
+STEP 3: UPDATE GAME.GD - SAVE HIGH SCORE
+============================================
+
+1. Buka res://scripts/Game.gd
+
+2. Di function game_over(), update menjadi:
+
+---COPY MULAI---
+
+func game_over():
+    """
+    Handle saat ular mati
+    """
+    is_game_over = true
+    print("Game Over! Final Score: ", score)
+    
+    # ===== SAVE HIGH SCORE =====
+    ScoreManager.save_high_score(score)
+    
+    # Transition ke GameOver scene setelah delay
+    await get_tree().create_timer(1.0).timeout
+    get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
+---COPY SELESAI---
+
+============================================
+STEP 4: UPDATE GAMEOVER.GD - DISPLAY SCORES
+============================================
+
+1. Buka res://scripts/GameOver.gd
+
+2. Ubah _ready() menjadi:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Saat GameOver scene start
+    """
+    # Connect buttons
+    $UIContainer/ContentBox/ButtonContainer/RestartButton.pressed.connect(_on_restart_pressed)
+    $UIContainer/ContentBox/ButtonContainer/MenuButton.pressed.connect(_on_menu_pressed)
+    
+    # ===== DISPLAY SCORES =====
+    var score_label = $UIContainer/ContentBox/ScoreLabel
+    var current_score = ScoreManager.current_score
+    var high_score = ScoreManager.get_high_score()
+    
+    # Display current score
+    score_label.text = "Score: " + str(current_score)
+    
+    # Check if new high score
+    if current_score == high_score and current_score > 0:
+        score_label.text += " (NEW HIGH SCORE!)"
+        score_label.add_theme_color_override("font_color", Color.YELLOW)
+
+func _on_restart_pressed():
+    """
+    Restart game
+    """
+    get_tree().change_scene_to_file("res://scenes/Game.tscn")
+
+func _on_menu_pressed():
+    """
+    Kembali ke main menu
+    """
+    get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+
+---COPY SELESAI---
+
+============================================
+STEP 5: UPDATE GAME.GD - TRACK CURRENT SCORE
+============================================
+
+1. Buka res://scripts/Game.gd
+
+2. Di function _ready(), tambahkan:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Setup awal game
+    """
+    # Initialize body
+    for i in range(body_length):
+        var segment_pos = snake_pos - direction * i
+        body_segments.append(segment_pos)
+    
+    # Spawn makanan pertama
+    food_pos = spawn_food()
+    
+    # ===== TRACK CURRENT SCORE =====
+    ScoreManager.set_current_score(0)
+
+---COPY SELESAI---
+
+3. Di function move_snake(), saat makan, update ScoreManager:
+
+---COPY MULAI---
+
+    # ===== CECK MAKAN =====
+    if snake_pos == food_pos:
+        # Ular makan!
+        score += 10
+        ScoreManager.set_current_score(score)  # ← TAMBAH INI
+        grow()
+        food_pos = spawn_food()
+        update_score_label()
+
+---COPY SELESAI---
+
+============================================
+STEP 6: UPDATE MAINMENU.GD - DISPLAY HIGH SCORE
+============================================
+
+1. Buka res://scripts/MainMenu.gd
+
+2. Di _ready(), tambahkan high score label:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Saat MainMenu start, setup button connections
+    """
+    # Connect buttons ke functions
+    $UIContainer/ButtonContainer/PlayButton.pressed.connect(_on_play_pressed)
+    $UIContainer/ButtonContainer/HighScoreButton.pressed.connect(_on_highscore_pressed)
+    $UIContainer/ButtonContainer/ExitButton.pressed.connect(_on_exit_pressed)
+    
+    # ===== DISPLAY HIGH SCORE =====
+    # Cek apakah HighScoreLabel ada
+    if has_node("UIContainer/HighScoreLabel"):
+        var high_score_label = $UIContainer/HighScoreLabel
+        var high_score = ScoreManager.get_high_score()
+        high_score_label.text = "High Score: " + str(high_score)
+
+func _on_play_pressed():
+    """
+    Saat Play button diklik, pindah ke Game scene
+    """
+    get_tree().change_scene_to_file("res://scenes/Game.tscn")
+
+func _on_highscore_pressed():
+    """
+    Tampilkan high score
+    """
+    var high_score = ScoreManager.get_high_score()
+    print("Current High Score: ", high_score)
+    
+    # Optional: bisa tambah dialog atau label update
+
+func _on_exit_pressed():
+    """
+    Keluar dari game
+    """
+    get_tree().quit()
+
+---COPY SELESAI---
+
+============================================
+STEP 7: ADD HIGH SCORE LABEL KE MAINMENU SCENE
+============================================
+
+1. Buka res://scenes/MainMenu.tscn
+
+2. Select UIContainer
+
+3. Add child node: Label
+   - Name: "HighScoreLabel"
+   - Text: "High Score: 0"
+   - Font Size: 24
+   - Position: Bottom right (misal X=800, Y=650)
+   - Color: Dark (contrast dengan background)
+
+============================================
+STEP 8: SAVE & TEST
+============================================
+
+1. Save semua files:
+   - Game.gd, GameOver.gd, MainMenu.gd
+   - ScoreManager.gd
+   - MainMenu.tscn, GameOver.tscn
+
+2. Jalankan game: F5
+
+3. Test flow:
+   - MainMenu tampil
+   - High Score label terlihat (0 first time)
+   - Click PLAY
+   - Main game, makan beberapa kali (score naik ke 20, 30, dll)
+   - Game over
+   - GameOver scene tampil dengan "Score: 30"
+   - Click RESTART
+   - Main lagi, makan lebih banyak (score naik lebih tinggi)
+   - Game over dengan higher score
+   - Lihat "NEW HIGH SCORE!" message
+   - Click MAIN MENU
+   - High Score label updated dengan angka baru
+
+✅ KESUKSESAN! High score system working!
+
+============================================
+TESTING
+============================================
+
+Test 1: AutoLoad ScoreManager terload?
+   ➜ F5
+   ➜ Console: "ScoreManager initialized..."
+   ✅ PASS
+
+Test 2: High score 0 first time?
+   ➜ First play
+   ➜ MainMenu: "High Score: 0"
+   ✅ PASS
+
+Test 3: Score naik saat makan?
+   ➜ Makan 1x: score 10
+   ➜ Makan 2x: score 20
+   ✅ PASS
+
+Test 4: Current score saved ke GameOver?
+   ➜ Game over dengan score 50
+   ➜ GameOver: "Score: 50"
+   ✅ PASS
+
+Test 5: High score updated jika lebih tinggi?
+   ➜ Play 1: score 30 → High Score = 30
+   ➜ Play 2: score 50 → High Score = 50 ✅
+   ➜ Play 3: score 40 → High Score tetap 50 ✅
+   ✅ PASS
+
+Test 6: High score persist setelah close game?
+   ➜ Play game, score 30, game over
+   ➜ Close game (ESC atau Exit)
+   ➜ Re-run game (F5)
+   ➜ MainMenu: "High Score: 30" (masih ada!)
+   ✅ PASS
+
+Test 7: File highscore.json ada?
+   ➜ Buka file explorer
+   ➜ Path: C:\Users\{username}\AppData\Roaming\Godot\app_userdata\{project_name}\
+   ➜ Cek ada file highscore.json
+   ✅ PASS
+
+Test 8: Tidak ada error?
+   ➜ Console clean
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 10!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ ScoreManager tidak terload
+   → Cek Project Settings → AutoLoad
+   → Pastikan path & name correct
+   → Restart Godot
+
+❌ High score tidak save
+   → Debug: print() di save_high_score()
+   → Cek folder user:// accessible
+   → Cek permissions (Windows security)
+
+❌ High score tidak load saat start
+   → File mungkin corrupt
+   → Cek console untuk parse error
+   → Delete highscore.json, recreate
+
+❌ Score tidak naik saat makan
+   → Cek ScoreManager.set_current_score() di-panggil
+   → Cek score variable di Game.gd update
+
+❌ GameOver tidak tampil score
+   → Cek ScoreManager.current_score set properly
+   → Debug: print(ScoreManager.current_score) di GameOver.gd
+
+============================================
+SELESAI HARI 9!
+============================================
+
+Pengetahuan yang didapat:
+✅ AutoLoad/Singleton pattern
+✅ FileAccess untuk read/write files
+✅ JSON serialization/deserialization
+✅ Global state management
+✅ Persistent data across sessions
+✅ File system paths (res:// vs user://)
+
+High score system persisten! Score achievements tracked! 🏆
+
+Next: Hari 10 - Visual upgrade!
+
+================================================================================
+HARI 10: VISUAL UPGRADE & POLISH
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Add background grid visual
+   - Upgrade snake colors (gradient/vibrant)
+   - Upgrade food visual (circle atau sparkle)
+   - Consistent color palette
+
+📝 PENJELASAN KONSEP:
+
+DRAWING ADVANCED:
+- draw_line(): garis
+- draw_circle(): lingkaran
+- draw_rect(): rectangle
+- Color.from_hsv(): HSV color space (mudah gradient)
+
+GRID VISUAL:
+Grid garis bantu membantu pemain lihat cell boundaries.
+Loop & draw_line setiap GRID_SIZE pixel.
+
+COLOR PALETTE:
+Pilih 3-4 warna yang harmonis:
+- Primary (head): vibrant
+- Secondary (body): slightly darker
+- Accent (food): contrast color
+- Background: neutral
+
+============================================
+STEP 1: ADD GRID BACKGROUND
+============================================
+
+1. Buka res://scripts/Game.gd
+
+2. Di function _draw(), tambahkan grid drawing di awal:
+
+---COPY MULAI---
+
+func _draw():
+    """
+    Gambar: grid background, kepala, body, dan makanan
+    """
+    
+    # ===== GAMBAR GRID BACKGROUND =====
+    # Draw vertical lines
+    for x in range(0, GRID_WIDTH + 1):
+        var line_x = x * GRID_SIZE
+        var start = Vector2(line_x, 0)
+        var end = Vector2(line_x, GRID_HEIGHT * GRID_SIZE)
+        draw_line(start, end, Color.LIGHT_GRAY, 1.0)  # 1.0 = line width
+    
+    # Draw horizontal lines
+    for y in range(0, GRID_HEIGHT + 1):
+        var line_y = y * GRID_SIZE
+        var start = Vector2(0, line_y)
+        var end = Vector2(GRID_WIDTH * GRID_SIZE, line_y)
+        draw_line(start, end, Color.LIGHT_GRAY, 1.0)
+    
+    # ===== GAMBAR KEPALA =====
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(head_rect, Color.RED)
+    
+    # ===== GAMBAR BODY =====
+    for segment in body_segments:
+        var segment_screen_pos = segment * GRID_SIZE
+        var segment_rect = Rect2(segment_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+        draw_rect(segment_rect, Color.GREEN)
+    
+    # ===== GAMBAR MAKANAN =====
+    var food_screen_pos = food_pos * GRID_SIZE
+    var food_rect = Rect2(food_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(food_rect, Color.YELLOW)
+
+---COPY SELESAI---
+
+============================================
+STEP 2: DEFINE COLOR PALETTE
+============================================
+
+1. Di atas Game.gd, di bagian GAME CONSTANTS, tambahkan:
+
+---COPY MULAI---
+
+# ==========================================
+# COLOR PALETTE
+# ==========================================
+var COLOR_HEAD = Color.from_hsv(0.3, 1.0, 1.0)        # Bright green
+var COLOR_BODY_BRIGHT = Color.from_hsv(0.3, 0.8, 1.0) # Medium green
+var COLOR_BODY_DARK = Color.from_hsv(0.3, 0.8, 0.6)   # Dark green
+var COLOR_FOOD = Color.from_hsv(0.08, 1.0, 1.0)       # Orange/Yellow
+var COLOR_GRID = Color(0.8, 0.8, 0.8, 0.3)            # Light gray
+
+---COPY SELESAI---
+
+Penjelasan HSV:
+- H (Hue): 0-1 (0=red, 0.3=green, 0.6=blue, dll)
+- S (Saturation): 0-1 (0=gray, 1=vibrant)
+- V (Value/Brightness): 0-1 (0=black, 1=bright)
+
+============================================
+STEP 3: UPDATE _draw() DENGAN COLOR PALETTE
+============================================
+
+1. Update _draw() function:
+
+---COPY MULAI---
+
+func _draw():
+    """
+    Gambar dengan color palette
+    """
+    
+    # ===== GAMBAR GRID BACKGROUND =====
+    for x in range(0, GRID_WIDTH + 1):
+        var line_x = x * GRID_SIZE
+        var start = Vector2(line_x, 0)
+        var end = Vector2(line_x, GRID_HEIGHT * GRID_SIZE)
+        draw_line(start, end, COLOR_GRID, 1.0)
+    
+    for y in range(0, GRID_HEIGHT + 1):
+        var line_y = y * GRID_SIZE
+        var start = Vector2(0, line_y)
+        var end = Vector2(GRID_WIDTH * GRID_SIZE, line_y)
+        draw_line(start, end, COLOR_GRID, 1.0)
+    
+    # ===== GAMBAR KEPALA (BRIGHT COLOR) =====
+    var head_screen_pos = snake_pos * GRID_SIZE
+    var head_rect = Rect2(head_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    draw_rect(head_rect, COLOR_HEAD)
+    
+    # ===== GAMBAR BODY (GRADIENT COLORS) =====
+    for i in range(body_segments.size()):
+        var segment = body_segments[i]
+        var segment_screen_pos = segment * GRID_SIZE
+        var segment_rect = Rect2(segment_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+        
+        # Gradient: head bright, tail dark
+        # Semakin ke belakang (i besar), semakin dark
+        var progress = float(i) / float(body_segments.size())  # 0 to 1
+        var body_color = COLOR_BODY_BRIGHT.lerp(COLOR_BODY_DARK, progress)
+        
+        draw_rect(segment_rect, body_color)
+    
+    # ===== GAMBAR MAKANAN (CIRCLE ATAU RECT) =====
+    var food_screen_pos = food_pos * GRID_SIZE
+    
+    # Option 1: Draw circle (lebih menarik)
+    var circle_center = food_screen_pos + Vector2(GRID_SIZE / 2, GRID_SIZE / 2)
+    var circle_radius = GRID_SIZE / 2 - 2
+    draw_circle(circle_center, circle_radius, COLOR_FOOD)
+    
+    # Option 2: Draw rectangle (uncomment jika prefer)
+    # var food_rect = Rect2(food_screen_pos, Vector2(GRID_SIZE, GRID_SIZE))
+    # draw_rect(food_rect, COLOR_FOOD)
+
+---COPY SELESAI---
+
+Penjelasan:
+- .lerp(from, to, weight): linear interpolation (blend 2 colors)
+- progress: 0 (kepala/bright) ke 1 (ekor/dark)
+- draw_circle(center, radius, color): draw filled circle
+- circle_radius = GRID_SIZE/2 - 2: sedikit lebih kecil dari cell
+
+============================================
+STEP 4: OPTIONAL - ADD BORDER RECT
+============================================
+
+1. Di _draw(), tambahkan border rect untuk game area:
+
+---COPY MULAI---
+
+    # ===== GAMBAR BORDER GAME AREA =====
+    var border_rect = Rect2(Vector2(0, 0), Vector2(GRID_WIDTH * GRID_SIZE, GRID_HEIGHT * GRID_SIZE))
+    draw_rect(border_rect, Color.TRANSPARENT, true, 2.0)  # true = stroke mode, 2.0 = line width
+
+---COPY SELESAI---
+
+Ini menggambar outline di sekitar game area. Opsional.
+
+============================================
+STEP 5: OPTIONAL - CUSTOMIZE GAMEBOARD BACKGROUND
+============================================
+
+1. Buka res://scenes/Game.tscn
+
+2. Select GameBoard (ColorRect node)
+
+3. Di INSPECTOR, ubah color:
+   - Current: White
+   - Ubah ke: Light blue atau light gray (#F0F0F0)
+   - Atau pakai custom color yang cocok
+
+Ini memberikan background color untuk game area.
+
+============================================
+STEP 6: SAVE & TEST
+============================================
+
+1. Save Game.gd dan Game.tscn
+
+2. Jalankan game: F5
+
+3. Test visuals:
+   - Grid visible di background
+   - Head: bright green
+   - Body: gradient dari bright ke dark green
+   - Food: orange circle
+   - Border: subtle outline (jika ditambah)
+
+✅ KESUKSESAN! Game terlihat jauh lebih polished!
+
+============================================
+TESTING
+============================================
+
+Test 1: Grid visible?
+   ➜ F5
+   ➜ Lihat garis grid horizontal & vertikal
+   ✅ PASS
+
+Test 2: Head color vibrant?
+   ➜ Lihat kepala ular (bright green)
+   ✅ PASS
+
+Test 3: Body gradient visible?
+   ➜ Gerakkan ular
+   ➜ Head terang, ekor lebih gelap (gradient)
+   ✅ PASS
+
+Test 4: Food visual distinctive?
+   ➜ Lihat food sebagai circle orange
+   ➜ Contrast dengan background
+   ✅ PASS
+
+Test 5: Overall look polished?
+   ➜ Compare sebelum & sesudah
+   ➜ Terlihat lebih professional
+   ✅ PASS
+
+Test 6: Performance tidak drop?
+   ➜ FPS stable 60
+   ➜ Tidak lag saat draw
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 11!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Grid tidak terlihat
+   → Color mungkin terlalu transparan
+   → Ubah COLOR_GRID ke Color(0.5, 0.5, 0.5) (lebih visible)
+
+❌ Gradient tidak smooth
+   → Check lerp logic
+   → Debug: print(progress) untuk lihat range 0-1
+
+❌ Food tidak terlihat
+   → Cek circle_radius > 0
+   → Cek COLOR_FOOD contrast dengan background
+   → Ubah warna ke yellow atau red
+
+❌ Visual lag/slow FPS
+   → Grid loop mungkin expensive
+   → Optimasi: draw grid sekali, cache hasilnya (advanced)
+   → Untuk sekarang, acceptable jika FPS masih 60
+
+❌ Color tidak sesuai ekspektasi
+   → Experiment dengan HSV values
+   → Gunakan online HSV picker untuk reference
+   → Test beberapa kombinasi warna
+
+============================================
+SELESAI HARI 10!
+============================================
+
+Pengetahuan yang didapat:
+✅ Draw lines dan circles
+✅ Color palette design
+✅ Color interpolation (lerp)
+✅ HSV color space
+✅ Visual hierarchy (bright vs dark)
+
+Game sekarang terlihat professional! 🎨
+
+Next: Hari 11 - Audio effects!
+
+================================================================================
+HARI 11: AUDIO EFFECTS & SOUND
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Download sound effects
+   - Setup AudioStreamPlayer nodes
+   - Play sound saat makan & game over
+   - Volume balance
+
+📝 PENJELASAN KONSEP:
+
+AUDIO IN GODOT:
+- AudioStreamPlayer: node untuk play audio
+- .stream: set audio file
+- .play(): jalankan audio
+- .bus: set output bus (untuk volume control)
+
+AUDIO FILES:
+- Format: .wav atau .ogg (lebih kecil)
+- Size: 30-300 KB per file (tidak terlalu besar)
+- Quality: 128kbps atau lebih (listen tapi tidak high-fi)
+
+PLAYING SOUNDS:
+Saat event terjadi (makan, game over), call .play()
+Godot otomatis handle playback.
+
+============================================
+STEP 1: DOWNLOAD SOUND EFFECTS
+============================================
+
+1. Buka https://opengameart.org/
+   Atau: https://freesound.org/
+
+2. Search untuk:
+   - "eating sound" atau "coin pickup" (untuk makan)
+   - "game over sound" atau "fail sound"
+
+3. Download file:
+   - Format: .wav atau .ogg
+   - Durasi: < 1 detik
+   - Quality: standar OK
+
+4. Simpan di folder:
+   - res://sounds/eat.wav
+   - res://sounds/gameover.wav
+   - Buat folder "sounds" jika belum ada
+
+5. (Optional) Background music:
+   - Search: "8-bit background music" atau "chiptune loop"
+   - Durasi: seberapa panjang (akan loop)
+   - Simpan: res://sounds/bgm.ogg
+
+============================================
+STEP 2: LOAD SOUND KE GAME.GD
+============================================
+
+1. Buka res://scripts/Game.gd
+
+2. Di bagian GAME CONSTANTS, tambahkan:
+
+---COPY MULAI---
+
+# ==========================================
+# AUDIO FILES
+# ==========================================
+var eat_sound_path = "res://sounds/eat.wav"
+var gameover_sound_path = "res://sounds/gameover.wav"
+
+---COPY SELESAI---
+
+3. Di function _ready(), tambahkan audio setup:
+
+---COPY MULAI---
+
+func _ready():
+    """
+    Setup awal game
+    """
+    # Initialize body
+    for i in range(body_length):
+        var segment_pos = snake_pos - direction * i
+        body_segments.append(segment_pos)
+    
+    # Spawn makanan pertama
+    food_pos = spawn_food()
+    
+    # Track current score
+    ScoreManager.set_current_score(0)
+    
+    # ===== SETUP AUDIO =====
+    _setup_audio()
+
+---COPY SELESAI---
+
+4. Tambahkan function baru:
+
+---COPY MULAI---
+
+func _setup_audio():
+    """
+    Setup audio players untuk game sounds
+    """
+    # Create AudioStreamPlayer untuk eat sound
+    var eat_player = AudioStreamPlayer.new()
+    
+    # Load audio file
+    if ResourceLoader.exists(eat_sound_path):
+        eat_player.stream = load(eat_sound_path)
+        eat_player.bus = "Master"  # Audio bus
+        eat_player.volume_db = 0   # Volume (dB)
+        add_child(eat_player)
+        print("Eat sound loaded successfully")
+    else:
+        print("ERROR: Eat sound file not found: ", eat_sound_path)
+    
+    # Create AudioStreamPlayer untuk game over sound
+    var gameover_player = AudioStreamPlayer.new()
+    
+    if ResourceLoader.exists(gameover_sound_path):
+        gameover_player.stream = load(gameover_sound_path)
+        gameover_player.bus = "Master"
+        gameover_player.volume_db = -5  # Sedikit lebih quiet
+        add_child(gameover_player)
+        print("Game over sound loaded successfully")
+    else:
+        print("ERROR: Game over sound file not found: ", gameover_sound_path)
+
+---COPY SELESAI---
+
+Penjelasan:
+- AudioStreamPlayer.new(): create player instance
+- load(path): load resource dari path
+- .stream: assign audio file ke player
+- .bus: audio bus untuk routing
+- .volume_db: volume dalam decibels
+- add_child(): tambah player ke scene
+
+============================================
+STEP 3: PLAY SOUND SAAT MAKAN
+============================================
+
+1. Di function move_snake(), saat makan:
+
+---COPY MULAI---
+
+    # ===== CECK MAKAN =====
+    if snake_pos == food_pos:
+        # ===== PLAY EAT SOUND =====
+        var eat_player = get_node_or_null("AudioStreamPlayer")
+        if eat_player and eat_player.stream:
+            eat_player.play()
+        
+        # Ular makan!
+        score += 10
+        ScoreManager.set_current_score(score)
+        grow()
+        food_pos = spawn_food()
+        update_score_label()
+
+---COPY SELESAI---
+
+Penjelasan:
+- get_node_or_null(): dapatkan node child, return null jika tidak ada
+- .play(): jalankan audio
+
+Tapi ini tidak ideal (first AudioStreamPlayer untuk eat).
+Lebih baik: simpan reference ke player.
+
+Better approach:
+
+---COPY MULAI---
+
+# Tambahkan di class level (sebelum _ready):
+var eat_player: AudioStreamPlayer
+var gameover_player: AudioStreamPlayer
+
+func _setup_audio():
+    """
+    Setup audio players
+    """
+    # Setup eat sound
+    eat_player = AudioStreamPlayer.new()
+    if ResourceLoader.exists(eat_sound_path):
+        eat_player.stream = load(eat_sound_path)
+        eat_player.bus = "Master"
+        eat_player.volume_db = 0
+        add_child(eat_player)
+        print("Eat sound loaded")
+    
+    # Setup gameover sound
+    gameover_player = AudioStreamPlayer.new()
+    if ResourceLoader.exists(gameover_sound_path):
+        gameover_player.stream = load(gameover_sound_path)
+        gameover_player.bus = "Master"
+        gameover_player.volume_db = -5
+        add_child(gameover_player)
+        print("Gameover sound loaded")
+
+# Saat makan:
+if snake_pos == food_pos:
+    # Play sound
+    if eat_player:
+        eat_player.play()
+    
+    # Rest of eating logic...
+
+---COPY SELESAI---
+
+============================================
+STEP 4: PLAY SOUND SAAT GAME OVER
+============================================
+
+1. Di function game_over():
+
+---COPY MULAI---
+
+func game_over():
+    """
+    Handle saat ular mati
+    """
+    is_game_over = true
+    print("Game Over! Final Score: ", score)
+    
+    # ===== PLAY GAME OVER SOUND =====
+    if gameover_player:
+        gameover_player.play()
+    
+    # Save high score
+    ScoreManager.save_high_score(score)
+    
+    # Transition ke GameOver scene setelah delay
+    await get_tree().create_timer(1.5).timeout  # Naikkan delay supaya sound selesai
+    get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
+---COPY SELESAI---
+
+============================================
+STEP 5: OPTIONAL - BACKGROUND MUSIC
+============================================
+
+1. Di class level, tambahkan:
+
+---COPY MULAI---
+
+var bgm_player: AudioStreamPlayer
+var bgm_sound_path = "res://sounds/bgm.ogg"
+
+---COPY SELESAI---
+
+2. Di _setup_audio(), tambahkan:
+
+---COPY MULAI---
+
+    # Setup background music
+    bgm_player = AudioStreamPlayer.new()
+    if ResourceLoader.exists(bgm_sound_path):
+        bgm_player.stream = load(bgm_sound_path)
+        bgm_player.bus = "Master"
+        bgm_player.volume_db = -10  # Background, quieter
+        bgm_player.bus = "Music"  # Separate bus untuk kontrol
+        add_child(bgm_player)
+        # Loop music (jika audio file format support)
+        # bgm_player.stream.set_loop(true)  # Tergantung format
+        print("Background music loaded")
+
+---COPY SELESAI---
+
+3. Di _ready(), setelah _setup_audio():
+
+---COPY MULAI---
+
+    # Play background music
+    if bgm_player:
+        bgm_player.play()
+
+---COPY SELESAI---
+
+4. Saat game over, stop music:
+
+---COPY MULAI---
+
+func game_over():
+    """
+    ..."""
+    is_game_over = true
+    
+    # Stop background music
+    if bgm_player:
+        bgm_player.stop()
+    
+    # Play gameover sound
+    if gameover_player:
+        gameover_player.play()
+    
+    # Rest of game over logic...
+
+---COPY SELESAI---
+
+============================================
+STEP 6: SAVE & TEST
+============================================
+
+1. Copy audio files ke res://sounds/
+   - eat.wav
+   - gameover.wav
+   - bgm.ogg (optional)
+
+2. Save Game.gd
+
+3. Jalankan game: F5
+
+4. Test audio:
+   - Game start, background music play (jika ada)
+   - Gerakkan ular ke makanan
+   - Saat makan, dengar eat sound
+   - Mainkan sampai game over
+   - Dengar gameover sound
+   - Music stop, transition ke GameOver scene
+
+✅ KESUKSESAN! Game sekarang punya sound!
+
+============================================
+TESTING
+============================================
+
+Test 1: Eat sound play saat makan?
+   ➜ Makan makanan
+   ➜ Dengar eat sound
+   ✅ PASS
+
+Test 2: Gameover sound play saat mati?
+   ➜ Mainkan sampai game over
+   ➜ Dengar gameover sound
+   ✅ PASS
+
+Test 3: Background music play (jika ada)?
+   ➜ Game start
+   ➜ Dengar background music loop
+   ✅ PASS
+
+Test 4: Volume balance?
+   ➜ Eat sound: nyaring cukup
+   ➜ Gameover sound: nyaring
+   ➜ Music: background (tidak menginterupsi)
+   ✅ PASS
+
+Test 5: Tidak ada error?
+   ➜ Console clean (jika file ada)
+   ➜ Atau pesan "file not found" jika file belum ditambah
+   ✅ PASS
+
+Test 6: Sound tidak block gameplay?
+   ➜ Game berjalan lancar
+   ➜ Tidak ada lag saat play sound
+   ✅ PASS
+
+Jika semua PASS, lanjut Hari 12!
+
+============================================
+TROUBLESHOOTING
+============================================
+
+❌ Eat sound tidak play
+   → Cek file ada di res://sounds/eat.wav
+   → Cek console untuk error message
+   → Cek ResourceLoader.exists() return true
+
+❌ Sound file not found error
+   → Pastikan file path benar: res://sounds/eat.wav
+   → Pastikan file extension benar (.wav, bukan .WAV)
+   → Refresh Godot (File → Refresh)
+
+❌ Audio distorsi atau quality buruk
+   → Gunakan file berkualitas lebih baik
+   → Re-download dari sumber lain
+   → Atau buat sound sendiri (Audacity, free)
+
+❌ Background music tidak loop
+   → Format OGG tidak auto-loop di Godot 4
+   → Solution: Gunakan format WAV dengan loop metadata
+   → Atau buat dua versi: intro + loop
+
+❌ Volume terlalu keras/lembut
+   → Adjust volume_db di script
+   → 0 db = normal, -5 db = quieter, -10 db = much quieter
+   → +5 db = louder (tapi risiko distort)
+
+============================================
+SELESAI HARI 11!
+============================================
+
+Pengetahuan yang didapat:
+✅ AudioStreamPlayer node
+✅ Loading audio files dengan load()
+✅ Playing audio dengan .play()
+✅ Volume control (dB)
+✅ Audio buses
+✅ Sound effect timing
+
+Game sekarang immersive dengan audio! 🔊
+
+Next: Hari 12 - Final testing & bug fixing!
+
+================================================================================
+HARI 12: FINAL PLAYTESTING & BUG FIXES
+================================================================================
+
+⏱️ WAKTU: 4-5 jam
+🎯 TUJUAN:
+   - Playtesting menyeluruh (5+ kali)
+   - Identify & fix bugs
+   - Ensure zero critical bugs
+   - Performance stable
+
+📝 TESTING METHODOLOGY:
+
+Full End-to-End Testing:
+1. MainMenu → Click Play
+2. Gameplay: Makan, grow, dodge
+3. Game Over → Score display
+4. Restart atau Menu
+5. High score persist
+
+Edge Cases & Stress Test:
+- Rapid input (mashing buttons)
+- Extreme maneuvers (spiral, corner)
+- Long playthroughs (10+ menit)
+- Multiple sessions
+
+Performance Checks:
+- FPS stable 60
+- Memory no leak
+- CPU usage reasonable
+
+============================================
+STEP 1: SYSTEMATIC PLAYTESTING
+============================================
+
+Mainkan game 5 kali dengan focus berbeda:
+
+SESSION 1: FLOW CHECK
+- Start dari MainMenu
+- Click PLAY
+- Mainkan normal game
+- Makan 3-4 kali
+- Game over (deliberately crash)
+- Check GameOver screen
+- Click RESTART atau MENU
+- Check smooth transitions
+
+Catat:
+- Transitions smooth? (yes/no/lag)
+- Audio plays? (yes/no/quality)
+- Score display correct? (yes/no)
+- Visuals clear? (yes/no)
+
+SESSION 2: GAMEPLAY MECHANICS
+- Focus pada movement responsiveness
+- Test 4 directions
+- Test prevent reverse (mash keys)
+- Test eating mechanic (approach carefully)
+- Test growing (visual)
+- Test collision (wall & self)
+
+Catat:
+- Movement smooth? (yes/no)
+- Input lag? (none/slight/noticeable)
+- Eating consistent? (always/sometimes/never)
+- Collision timing correct? (yes/no)
+
+SESSION 3: EDGE CASES
+- Spiral movement (corner cases)
+- Rapid input during makan
+- Makan dekat dinding
+- Extreme speed (hold key continuously)
+- Multiple games rapid restart
+
+Catat:
+- Any unexpected behavior? (list)
+- Crash atau error? (yes/no)
+- Visual glitch? (yes/no)
+
+SESSION 4: STRESS TEST
+- Main game 10+ menit
+- Monitor FPS (stable?)
+- Monitor memory (leak?)
+- Check CPU usage (high?)
+
+Catat:
+- Performance degradation? (yes/no)
+- Memory increase over time? (yes/no)
+- FPS drop? (stable/slight/significant)
+
+SESSION 5: HIGH SCORE SYSTEM
+- Play 1: score 20 → High Score = 20
+- Play 2: score 50 → High Score = 50
+- Close game & restart
+- Check High Score persist
+
+Catat:
+- High score save? (yes/no)
+- High score load? (yes/no)
+- "NEW HIGH SCORE" message? (yes/no)
+
+============================================
+STEP 2: BUG DOCUMENTATION
+============================================
+
+Setiap bug ditemukan, catat dengan format:
+
+BUG #[N]: [Title]
+
+Severity: HIGH / MEDIUM / LOW
+(HIGH = breaks game, MEDIUM = impacts play, LOW = minor)
+
+Description:
+[Deskripsi singkat apa yang terjadi]
+
+Steps to Reproduce:
+1. [Langkah 1]
+2. [Langkah 2]
+3. [Dst]
+
+Expected Result:
+[Apa yang seharusnya terjadi]
+
+Actual Result:
+[Apa yang terjadi sekarang]
+
+Affected Areas:
+[Script/Scene yang terlibat]
+
+Possible Fix:
+[Ide solusi]
+
+---
+
+CONTOH BUG LOG:
+
+BUG #1: Ular melintasi makanan tanpa makan
+
+Severity: HIGH
+
+Description:
+Kadang saat ular bergerak cepat, kepala lintasi makanan tanpa ada collision register.
+
+Steps to Reproduce:
+1. Main game normal
+2. Gerakkan ular cepat ke makanan
+3. Kadang kepala lintasi tanpa ada interaksi
+
+Expected Result:
+Score naik, ular grow, makanan spawn baru
+
+Actual Result:
+Kepala lintasi, tidak ada apapun
+
+Affected Areas:
+Game.gd - move_snake() function
+
+Possible Fix:
+Cek collision logic di move_snake(), mungkin timing issue dengan insert/pop
+
+============================================
+STEP 3: COMMON BUGS & SOLUTIONS
+============================================
+
+BUG: Movement lambat saat input mashing
+FIX: Bukan bug, ini expected behavior (MOVE_SPEED timer)
+
+BUG: Audio crash / game freeze saat sound play
+FIX: 
+- Ensure audio file format correct (.wav atau .ogg)
+- Ensure file size reasonable (< 500 KB)
+- Ensure ResourceLoader.exists() check
+
+BUG: High score tidak save
+FIX:
+- Ensure FileAccess accessible (check permissions)
+- Debug: print() di save_high_score()
+- Check folder user:// readable
+
+BUG: Grid tidak visible atau terlalu terang/gelap
+FIX:
+- Adjust COLOR_GRID value
+- Current: Color(0.8, 0.8, 0.8, 0.3)
+- Try: Color(0.5, 0.5, 0.5, 0.5) untuk lebih visible
+
+BUG: Game over tidak trigger saat nabrak
+FIX:
+- Debug: print("Collision checked") di check_collision()
+- Verify GRID_WIDTH & GRID_HEIGHT correct (20, 15)
+- Ensure body_segments array setup correct
+
+BUG: Scene transition laggy
+FIX:
+- Cek file scene sudah save
+- Cek path correct (res://scenes/...)
+- Cek no script error di console
+
+============================================
+STEP 4: TESTING CHECKLIST
+============================================
+
+FUNCTIONALITY:
+☐ MainMenu scene loads
+☐ Play button transitions to Game
+☐ Game starts fresh each time
+☐ Snake moves (4 directions)
+☐ Input responsive (no lag)
+☐ Food spawns & visible
+☐ Eating works (sound, grow, score)
+☐ Collision detects (wall & self)
+☐ Game over triggers
+☐ GameOver scene displays correctly
+☐ Restart button works
+☐ Menu button works
+☐ Exit button closes game
+☐ High score displays
+☐ High score persists
+
+AUDIO:
+☐ Eat sound plays saat makan
+☐ Gameover sound plays saat mati
+☐ Background music plays (jika ada)
+☐ Volume balanced
+☐ No distortion
+
+VISUALS:
+☐ Grid visible
+☐ Head color vibrant
+☐ Body gradient smooth
+☐ Food distinctive
+☐ Text readable
+☐ Overall look polished
+
+PERFORMANCE:
+☐ FPS stable 60
+☐ No lag during gameplay
+☐ No memory leak (long session)
+☐ No crash
+
+============================================
+STEP 5: GENERATE TESTING REPORT
+============================================
+
+FINAL PLAYTESTING REPORT - DAY 12
+
+Date: [Tanggal]
+Tester: [Nama]
+Version: 1.0
+Platform: Windows / Mac / Linux
+
+PLAYTHROUGH SUMMARY:
+Total Sessions: 5
+Total Playtime: ~45 menit
+Average Game Duration: 3-5 menit per session
+
+BUGS FOUND: [N]
+BUGS FIXED: [N]
+BUGS REMAINING: 0 (target)
+
+FUNCTIONALITY STATUS:
+
+Core Gameplay:
+✅ Movement - Working (smooth, responsive)
+✅ Input Handling - Working (4 directions, no lag)
+✅ Eating Mechanic - Working (consistent)
+✅ Growing - Working (visual feedback)
+✅ Scoring - Working (updates correct)
+
+Collision:
+✅ Wall Collision - Working (triggers game over)
+✅ Self Collision - Working (triggers game over)
+✅ Prevent Reverse - Working (no 180° instant)
+
+Systems:
+✅ High Score Save/Load - Working (persists)
+✅ Scene Transitions - Working (smooth)
+✅ Audio Effects - Working (no crash)
+✅ UI Interactions - Working (buttons responsive)
+
+Visual:
+✅ Grid Background - Visible
+✅ Snake Colors - Vibrant & gradient
+✅ Food Visual - Distinctive
+✅ Overall Polish - Professional
+
+Audio:
+✅ Eat Sound - Playing correctly
+✅ Gameover Sound - Playing correctly
+✅ Volume Balance - Good
+✅ No Audio Issues - Confirmed
+
+Performance:
+✅ FPS - Stable 60
+✅ Memory - No leak (10+ min test)
+✅ CPU - Normal usage
+✅ Stability - No crash
+
+GAMEPLAY FEEL:
+- Movement Speed: [Perfect / Too Fast / Too Slow]
+- Difficulty: [Easy / Just Right / Hard]
+- Engagement: [Engaging / Okay / Boring]
+- Polish: [Professional / Good / Needs Work]
+
+KNOWN ISSUES:
+[List any remaining minor issues, if any]
+
+RECOMMENDATIONS:
+[Any improvements for future versions]
+
+READY FOR SHOWCASE: YES ✅
+
+============================================
+STEP 6: FINAL POLISH
+============================================
+
+Jika ada minor bugs:
+1. Fix satu per satu
+2. Test setelah tiap fix
+3. Ensure fix tidak break feature lain
+
+Jika ada high priority bug:
+1. Debug & fix ASAP
+2. Re-test thoroughly
+3. Check no regression
+
+Optimasi:
+- Game berjalan smooth 60 FPS ✅
+- No memory leak ✅
+- Audio clear ✅
+- Visuals polished ✅
+
+============================================
+STEP 7: SAVE & BACKUP
+============================================
+
+1. Save semua files
+2. Backup project folder
+3. Version control (Git):
+   ```
+   git add .
+   git commit -m "Day 12: Final testing & polish - ready for showcase"
+   git push
+   ```
+
+✅ KESUKSESAN! Game fully tested & ready!
+
+============================================
+SELESAI HARI 12!
+============================================
+
+Pengetahuan yang didapat:
+✅ Systematic testing methodology
+✅ Bug tracking & documentation
+✅ Performance profiling
+✅ Quality assurance
+✅ Playtesting best practices
+
+Game siap untuk showcase! ✨
+
+Next: Hari 13 - Content creation!
+
+================================================================================
+HARI 13: SHOWCASE CONTENT CREATION
+================================================================================
+
+⏱️ WAKTU: 2-3 jam
+🎯 TUJUAN:
+   - Record gameplay video
+   - Create README documentation
+   - Prepare presentation materials
+   - Collect screenshots
+
+📝 CONTENT CHECKLIST:
+
+□ Gameplay video (1-2 menit)
+□ README.md dengan feature list
+□ Demo script untuk presentation
+□ 3-4 screenshots
+□ Project structure documentation
+
+============================================
+STEP 1: RECORD GAMEPLAY VIDEO
+============================================
+
+1. Download OBS Studio (free):
+   - Link: https://obsproject.com/
+   - Install & setup
+
+2. Setup OBS:
+   - New Scene
+   - Add Source → Game Capture (Godot window)
+   - Set resolution: 1280x720
+   - FPS: 30 atau 60
+   - Format: MP4
+
+3. Record gameplay:
+   - Start recording
+   - Click PLAY di MainMenu
+   - Mainkan game normal: makan, dodge, show movements
+   - Saat game over, continue ke GameOver screen
+   - Click RESTART, show second round
+   - Total durasi: 1-2 menit
+   - Highlight: eating, growing, game over, high score
+
+4. Edit video (optional):
+   - Potong intro/outro dead time
+   - Ensure gameplay jelas terlihat
+   - Audio jelas terdengar
+
+5. Export:
+   - Format: MP4 atau WebM
+   - Resolution: 1280x720
+   - File size: < 100 MB
+   - Save: res://gameplay_video.mp4
+
+============================================
+STEP 2: CREATE README.MD
+============================================
+
+1. Buat file: res://README.md
+
+2. Copy struktur ini:
+
+---COPY MULAI---
+
+# 🐍 Snake Game - Godot Engine
+
+**A classic Snake game built in 2 weeks using Godot Engine**
+
+## 🎮 Overview
+
+This is a fully functional Snake game implemented in GDScript with complete gameplay mechanics, persistent high scores, visual polish, and audio effects.
+
+- **Engine**: Godot Engine 4.0+
+- **Language**: GDScript
+- **Development Time**: 14 days
+- **Status**: Complete & Playable ✅
+
+## ✨ Features
+
+### Core Gameplay
+- ✅ 4-direction movement (Arrow Keys)
+- ✅ Smooth grid-based movement
+- ✅ Collision detection (walls & self)
+- ✅ Food spawning with random positions
+- ✅ Snake growing mechanic
+- ✅ Scoring system (+10 per food)
+- ✅ Game Over detection & handling
+
+### Advanced Features
+- ✅ Main Menu scene
+- ✅ Game Over screen with score display
+- ✅ High score persistence (save/load to file)
+- ✅ Scene transitions (smooth & responsive)
+- ✅ 360° prevent-reverse mechanic
+- ✅ Audio effects (eat & game over sounds)
+- ✅ Background music (optional)
+- ✅ Visual polish (grid, gradient colors, circle food)
+- ✅ Professional UI layout
+
+## 🎮 How to Play
+
+### Controls
+| Key | Action |
+|-----|--------|
+| ↑ / ↓ / ← / → | Move snake |
+| SPACE | Restart (game over screen) |
+| Click buttons | Menu navigation |
+
+### Objective
+- Eat food (yellow circles) to grow and score points
+- Avoid hitting walls and yourself
+- Get the highest score!
+- Compete with your personal best (high score)
+
+### Gameplay Flow
+```
+MainMenu
+  ↓ (Click PLAY)
+Game (Eat & Grow)
+  ↓ (Hit wall or self)
+GameOver (Show Score)
+  ↓ (Click RESTART or MENU)
+Back to start
+```
+
+## 🎨 Visual Design
+
+- **Grid Background**: Light gray grid showing cell boundaries
+- **Snake Head**: Bright green (#80FF00)
+- **Snake Body**: Gradient green (bright to dark)
+- **Food**: Orange/yellow circles
+- **Color Palette**: Carefully selected for contrast & clarity
+
+## 🔊 Audio
+
+- **Eat Sound**: Plays when snake eats food
+- **Game Over Sound**: Plays when snake dies
+- **Background Music**: Looping 8-bit style music (optional)
+- **Volume**: Balanced for comfortable listening
+
+## 📊 Game Balance
+
+| Parameter | Value | Rationale |
+|-----------|-------|-----------|
+| Grid Size | 20x15 cells | Comfortable for mouse/keyboard |
+| Cell Size | 32 pixels | Clear visibility |
+| Move Speed | 0.15 seconds | Smooth but challenging |
+| Score per Food | 10 points | Fair progression |
+
+## 🏗️ Project Structure
+
+```
+res://
+├── scenes/
+│   ├── MainMenu.tscn         # Main menu UI
+│   ├── Game.tscn             # Main gameplay scene
+│   └── GameOver.tscn         # Game over screen
+├── scripts/
+│   ├── Game.gd               # Core game logic
+│   ├── MainMenu.gd           # Menu interactions
+│   ├── GameOver.gd           # Game over screen logic
+│   └── ScoreManager.gd       # High score system
+├── sounds/
+│   ├── eat.wav               # Eating sound effect
+│   ├── gameover.wav          # Game over sound effect
+│   └── bgm.ogg               # Background music (optional)
+└── README.md                 # This file
+```
+
+## 🛠️ Technical Implementation
+
+### Architecture
+- **Scene-based design**: Modular scenes for menu, gameplay, game over
+- **Node hierarchy**: Proper parent-child relationships for organization
+- **Singleton pattern**: AutoLoad ScoreManager for persistent data
+
+### Core Systems
+- **Grid-based movement**: Position tracking in grid coordinates
+- **Collision detection**: Wall bounds checking & array membership testing
+- **Score persistence**: FileAccess + JSON serialization
+- **Scene transitions**: Smooth scene changes with proper cleanup
+
+### Code Quality
+- Organized functions with clear documentation
+- Constants for easy tuning (movement speed, grid size, colors)
+- Error handling for missing audio files
+- Debug prints for troubleshooting
+
+## 🎯 Development Highlights
+
+### Week 1 (Days 1-7)
+- Day 1-2: Scene setup & UI basics
+- Day 3: Snake movement implementation
+- Day 4: Body/ekor system with arrays
+- Day 5: Food & scoring mechanics
+- Day 6: Collision detection & game over
+- Day 7: Playtesting & optimization
+
+### Week 2 (Days 8-14)
+- Day 8: Menu system & scene transitions
+- Day 9: High score persistence
+- Day 10: Visual upgrade (grid, colors, effects)
+- Day 11: Audio effects & sound
+- Day 12: Final testing & bug fixes
+- Day 13: Content creation & documentation
+- Day 14: Presentation & showcase
+
+## 📈 Performance
+
+- **Target FPS**: 60 (locked)
+- **Actual FPS**: 60 stable ✅
+- **Memory Usage**: ~50-100 MB
+- **CPU Usage**: < 5% (idle)
+- **Load Time**: < 2 seconds
+
+## 🐛 Known Issues
+
+None currently! Game is fully tested and stable. ✅
+
+## 🚀 Future Enhancements
+
+Potential features for future versions:
+- Difficulty levels (speed adjustments)
+- Obstacles/power-ups
+- Multiplayer modes
+- Leaderboard system
+- Different game modes (time attack, survival)
+- Mobile controls support
+
+## 📚 Learning Resources
+
+- [Godot Engine Documentation](https://docs.godotengine.org/)
+- [GDScript Language Reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/index.html)
+- [Game Design Patterns](https://gameprogrammingpatterns.com/)
+
+## 👤 Credits
+
+- **Developer**: [Your Name]
+- **Engine**: Godot Engine 4.0+
+- **Audio**: OpenGameArt.org & FreeSFX
+- **Inspiration**: Classic Snake arcade game
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+---
+
+**Ready to play?** Press F5 in Godot Editor to run the game!
+
+---COPY SELESAI---
+
+============================================
+STEP 3: CREATE DEMO SCRIPT
+============================================
+
+1. Buat file: res://DEMO_SCRIPT.txt
+
+2. Copy script:
+
+---COPY MULAI---
+
+SNAKE GAME - DEMO SCRIPT (2 MINUTES)
+
+===== 0:00-0:10 INTRO =====
+
+"Hello! I'm about to show you a fully functional Snake game
+that I developed in just 14 days using Godot Engine.
+This includes complete gameplay, menu system, high scores,
+audio effects, and visual polish."
+
+===== 0:10-0:20 SHOW MAIN MENU =====
+
+(Show MainMenu screen with title "SNAKE GAME" and buttons)
+
+"This is the main menu. You can click PLAY to start the game,
+check your HIGH SCORES, or EXIT the game."
+
+===== 0:20-0:35 START GAMEPLAY =====
+
+(Click PLAY button)
+(Game scene loads with empty grid, ular di tengah)
+
+"The game starts with the snake in the center of the grid.
+The goal is to eat the orange food to grow and score points."
+
+===== 0:35-1:00 SHOW CORE GAMEPLAY =====
+
+(Gerakkan ular, makan 3-4x makanan)
+
+"Watch as I move the snake using arrow keys.
+The movement is smooth and responsive.
+Every time the snake eats food, it grows longer and scores 10 points.
+You can see the score increasing in the top-left corner.
+The snake body has a nice gradient color, from bright green head to darker tail.
+The grid in the background helps you see the game boundaries."
+
+===== 1:00-1:10 SHOW GAME OVER =====
+
+(Deliberately move ular ke dinding untuk game over)
+
+"When the snake hits a wall or itself, the game ends.
+Let me deliberately hit a wall to show you the game over mechanics."
+
+(Gerakkan kepala ke tepi grid → collision → transition ke GameOver scene)
+
+===== 1:10-1:25 SHOW GAME OVER SCREEN =====
+
+(GameOver scene dengan score display)
+
+"Here's the game over screen. It shows your final score.
+If this was a new personal best, it would display 'NEW HIGH SCORE!'
+in yellow. The high score is automatically saved to a file,
+so it persists even after you close the game.
+You can click RESTART to play again, or MAIN MENU to go back."
+
+===== 1:25-1:35 SHOW RESTART =====
+
+(Click RESTART button)
+
+"When you click RESTART, the game starts fresh with a new snake.
+All previous progress is reset, but your high score is remembered."
+
+===== 1:35-1:50 TECHNICAL HIGHLIGHTS =====
+
+(Pause gameplay or return to menu)
+
+"Here are some technical highlights of this implementation:
+
+- Scene Architecture: Separate scenes for menu, gameplay, and game over
+- Collision Detection: Both wall bouncing and self-collision
+- Persistence: High scores are saved using FileAccess and JSON
+- Audio System: Sound effects for eating and game over
+- Visual Polish: Grid background, gradient colors, smooth animations
+- Performance: Runs at stable 60 FPS with no lag"
+
+===== 1:50-2:00 CONCLUSION =====
+
+"This project demonstrates core game development concepts:
+game loops, input handling, collision detection, UI design,
+data persistence, and audio integration.
+All built in GDScript using the Godot Engine.
+
+Thank you for watching! Questions?"
+
+---COPY SELESAI---
+
+============================================
+STEP 4: TAKE SCREENSHOTS
+============================================
+
+1. Jalankan game (F5)
+
+2. Screenshot 1: MainMenu
+   - Klik screenshot icon (atau Alt+PrintScreen)
+   - Save: res://screenshot_menu.png
+
+3. Screenshot 2: Gameplay
+   - Play game, position ular somewhere interesting
+   - Take screenshot
+
+4. Screenshot 3: GameOver
+   - Play until game over
+   - Take screenshot
+
+5. Screenshot 4: (Optional) Showcase features
+   - Grid visible
+   - Snake dengan food
+   - Score label
+
+Save semua ke folder: res://screenshots/
+
+============================================
+STEP 5: ORGANIZE FILES
+============================================
+
+Final project structure:
+
+```
+res://
+├── scenes/
+│   ├── MainMenu.tscn
+│   ├── Game.tscn
+│   └── GameOver.tscn
+├── scripts/
+│   ├── Game.gd
+│   ├── MainMenu.gd
+│   ├── GameOver.gd
+│   └── ScoreManager.gd
+├── sounds/
+│   ├── eat.wav
+│   ├── gameover.wav
+│   └── bgm.ogg
+├── screenshots/
+│   ├── screenshot_menu.png
+│   ├── screenshot_gameplay.png
+│   ├── screenshot_gameover.png
+│   └── screenshot_feature.png
+├── README.md
+├── DEMO_SCRIPT.txt
+├── gameplay_video.mp4
+└── planSnake.txt
+```
+
+============================================
+STEP 6: PREPARE PRESENTATION MATERIALS
+============================================
+
+1. Optional: Create simple slides:
+   - Intro slide (title, name, date)
+   - Development timeline (14 days)
+   - Features list
+   - Technical architecture
+   - Live demo segment
+   - Conclusion
+
+2. Materials to bring:
+   - Laptop dengan Godot + Game project
+   - Video file (backup jika live demo bermasalah)
+   - Screenshots untuk reference
+   - Demo script (written)
+
+3. Presentation approach:
+   - Short intro (30 seconds)
+   - Live demo gameplay (1-2 minutes)
+   - Show GameOver & high score
+   - Show menu & settings
+   - Technical highlights (1 minute)
+   - Q&A (2-3 minutes)
+
+✅ KESUKSESAN! Content siap untuk showcase!
+
+============================================
+SELESAI HARI 13!
+============================================
+
+Pengetahuan yang didapat:
+✅ Video recording & editing
+✅ Technical documentation writing
+✅ Presentation preparation
+✅ Content organization
+✅ Showcase readiness
+
+Semua materi siap! Tinggal presentasi! 🎬
+
+Next: Hari 14 - PRESENTATION DAY!
+
+================================================================================
+HARI 14: PRESENTATION & SHOWCASE
+================================================================================
+
+⏱️ WAKTU: 1-2 jam (presentation time varies)
+🎯 TUJUAN:
+   - Present game ke audience
+   - Demonstrate gameplay & features
+   - Discuss technical implementation
+   - Answer questions
+   - Celebrate completion!
+
+📝 PRESENTATION OUTLINE:
+
+Total Time: 15 minutes recommended
+- Intro: 2 min
+- Live Demo: 5-7 min
+- Technical: 3-4 min
+- Q&A: 2-3 min
+
+============================================
+STEP 1: FINAL PREPARATION (1 HOUR BEFORE)
+============================================
+
+Checklist:
+
+□ Test game satu kali (ensure berjalan lancar)
+□ Verify audio working (headphone/speaker)
+□ Check projector/screen setup
+□ Open Godot project
+□ Open presentation materials
+□ Open video file (backup)
+□ Prepare demo script notes
+□ Take deep breath & relax!
+
+Setup Technical:
+- HDMI/cable dari laptop ke projector ✅
+- Audio output configured ✅
+- Godot window positioned untuk screen share ✅
+- Font size readable di projector ✅
+
+============================================
+STEP 2: PRESENTATION FLOW
+============================================
+
+===== PART 1: INTRODUCTION (2 minutes) =====
+
+"Hello everyone. My name is [Your Name].
+Today I'm sharing a project I completed in 14 days:
+a fully functional Snake game built with Godot Engine.
+
+This started as a challenge to learn game development from scratch.
+Over two weeks, I went from 'Hello, Godot' to having a complete,
+polished, playable game with menus, scoring, audio, and persistent data.
+
+Let me show you what's possible when you dedicate time to learning!"
+
+(Show MainMenu on screen)
+
+===== PART 2: GAMEPLAY DEMO (5-7 minutes) =====
+
+"First, let me show you the game in action."
+
+(Click PLAY)
+
+"This is the core gameplay. The snake starts in the center of a grid.
+Using arrow keys, I can move in four directions."
+
+(Move snake, show smooth movement)
+
+"The goal is to eat the yellow food to grow and score points."
+
+(Move toward food, eat it)
+
+"Watch the score increase by 10 points, and the snake grows longer.
+The body has a nice gradient color - bright green at the head,
+fading to darker green at the tail.
+The grid in the background helps with visibility."
+
+(Eat more food, maybe 3-4x total)
+
+"Notice the body follows the head smoothly.
+The snake can't reverse 180 degrees instantly,
+which prevents accidental self-collision."
+
+(Show preventing reverse)
+
+"The snake is now quite long. Let me deliberately hit a wall to show
+you the collision detection and game over mechanics."
+
+(Move to wall, trigger game over)
+(Game over animation, 1 second delay)
+(GameOver screen appears)
+
+"Here's the game over screen. It shows my final score: [number].
+The high score is automatically saved to disk, so even after I close
+the game, my best score is remembered next time I play.
+Let me restart and show you how the menu system works."
+
+(Click RESTART)
+
+"Fresh start! The snake is back to normal size, score is reset to 0."
+
+(Option: Play briefly again, or go back to menu)
+
+(Click MAIN MENU at game over screen, or wait for game over)
+
+===== PART 3: TECHNICAL HIGHLIGHTS (3-4 minutes) =====
+
+"Now let me talk about the technical side.
+
+ARCHITECTURE:
+The game uses a modular scene-based design.
+- MainMenu.tscn: Menu with Play/Exit buttons
+- Game.tscn: Main gameplay with snake, food, grid
+- GameOver.tscn: Score display and restart options
+
+DATA PERSISTENCE:
+The high score is saved using GDScript's FileAccess API and JSON format.
+When you eat food and score increases, it's saved automatically.
+This persists across game sessions - close and reopen, score still there.
+
+COLLISION DETECTION:
+Two types: wall collision (grid boundaries) and self-collision (body array).
+When the snake's head position matches a boundary or its own body,
+game over is triggered.
+
+AUDIO SYSTEM:
+Sound effects play on events:
+- Eat sound when food consumed
+- Game over sound when collision happens
+Optional background music loops during gameplay.
+
+VISUAL DESIGN:
+Grid background for clarity
+Color palette carefully chosen: bright green snake, orange food
+Gradient coloring on snake body for visual depth
+
+PERFORMANCE:
+The game runs at a stable 60 FPS. Even after long play sessions,
+there's no memory leaks or performance degradation.
+
+All of this was built in GDScript, Godot's Python-like scripting language,
+which is perfect for game development."
+
+===== PART 4: KEY LEARNINGS (1 minute) =====
+
+"Over 14 days, I learned:
+
+1. GAME ENGINE FUNDAMENTALS
+   - Scene management, nodes, signals
+   - Game loop and delta timing
+   - Drawing and rendering
+
+2. PROGRAMMING CONCEPTS
+   - Arrays and data structures
+   - Functions and organization
+   - State management
+
+3. USER EXPERIENCE
+   - Menu design
+   - Responsive input
+   - Audio-visual feedback
+
+4. GAME BALANCE
+   - Movement speed tuning
+   - Difficulty progression
+   - Player feedback loops
+
+The most important lesson: Start simple, iterate, polish.
+Week 1 was core gameplay. Week 2 was features, audio, and polish."
+
+===== PART 5: Q&A (2-3 minutes) =====
+
+"I'm happy to answer any questions about the game, the code,
+or the development process."
+
+(Wait for questions, be ready to:)
+- Show specific code sections if asked
+- Explain game mechanics
+- Discuss development timeline
+- Talk about next features
+
+===== PART 6: CONCLUSION (30 seconds) =====
+
+"Thank you all for your attention.
+This project shows that game development is accessible to everyone.
+With the right tools (Godot), tutorials, and dedication,
+you can create complete games.
+
+If you're interested in game development,
+I encourage you to try it yourself. The Godot Engine is free,
+the community is supportive, and the learning curve is not as steep
+as many people think.
+
+Any final questions? Thank you!"
+
+============================================
+STEP 3: HANDLING LIVE DEMO
+============================================
+
+Best Practices:
+
+✅ DO:
+- Test beforehand to ensure no surprises
+- Take your time, don't rush
+- Explain what you're doing as you do it
+- Show multiple playthroughs (success & failure)
+- Have a backup (video) in case live demo fails
+- Stay calm if something goes wrong
+
+❌ DON'T:
+- Play the game silently (narrate!)
+- Rush through demo (let audience see details)
+- Get stuck on one mechanic too long
+- Make the presentation about code syntax (focus on game)
+- Assume audience knows what you're talking about
+
+If Live Demo Fails:
+"Let me show you the video I recorded instead."
+(Play gameplay_video.mp4)
+
+============================================
+STEP 4: HANDLING QUESTIONS
+============================================
+
+Typical Questions & Answers:
+
+Q: "How long did this really take you?"
+A: "14 days of dedicated work. About 4-5 hours per day on average."
+
+Q: "What's the hardest part?"
+A: "Understanding Godot's coordinate system and signal connections initially.
+   After that, it was mostly planning and iteration."
+
+Q: "Can you export this to play on phone/web?"
+A: "Yes! Godot can export to Android, Web (HTML5), Windows, Mac, Linux.
+   For this project, I focused on Windows desktop, but mobile export
+   would be straightforward."
+
+Q: "Why Godot over Unity/Unreal?"
+A: "Godot is free, lightweight, and the scripting language (GDScript)
+   is beginner-friendly. It's perfect for 2D games."
+
+Q: "What would you add next?"
+A: "Difficulty levels, power-ups, obstacles, maybe a leaderboard.
+   Maybe even mobile controls for play on smartphones."
+
+Q: "How did you learn this?"
+A: "Online tutorials, Godot documentation, lots of practice and iteration.
+   Started with basics, gradually added complexity."
+
+============================================
+STEP 5: CELEBRATION & REFLECTION
+============================================
+
+After presentation:
+
+✅ CELEBRATE YOUR ACHIEVEMENT!
+You just completed a full game development cycle in 2 weeks.
+From zero to hero. That's awesome! 🎉
+
+REFLECTION:
+- What went well?
+- What was challenging?
+- What did you learn?
+- What's next?
+
+DOCUMENTATION:
+- Save all materials (slides, video, code)
+- Write down key learnings
+- Note ideas for future projects
+
+SHARE:
+- Post on social media (if desired)
+- Share on itch.io or similar game platform
+- Show friends and family
+- Get feedback for future improvements
+
+============================================
+STEP 6: PROJECT COMPLETION
+============================================
+
+Final Checklist:
+
+✅ Code complete & tested
+✅ Audio implemented & balanced
+✅ Visuals polished
+✅ Documentation complete (README)
+✅ Screenshots captured
+✅ Video recorded
+✅ High score system working
+✅ Menus functional
+✅ Performance optimized
+✅ Presentation materials ready
+✅ Demo script prepared
+✅ Game released/shared
+
+Git Commit (final):
+```
+git add .
+git commit -m "Day 14: Presentation complete - Project finished!"
+git push
+```
+
+============================================
+SELESAI HARI 14!
+============================================
+
+🎉 PROJECT COMPLETE! 🎉
+
+Pengetahuan yang didapat:
+✅ Presentation skills
+✅ Public speaking & demo skills
+✅ Project management & execution
+✅ Complete game development cycle
+✅ Professional delivery
+
+WHAT YOU'VE ACCOMPLISHED:
+
+✅ Complete 2D game from scratch
+✅ Learned Godot Engine
+✅ Built systems: movement, collision, scoring, persistence
+✅ Integrated audio & visual polish
+✅ Created user-friendly menus
+✅ Managed scope & deadline (14 days)
+✅ Documented & presented work
+
+FINAL STATS:
+
+- Development Time: 14 days
+- Hours Invested: ~70+ hours
+- Lines of Code: ~500+ (game logic)
+- Features Implemented: 15+
+- Bugs Fixed: Many learned lessons!
+- High Score: Your personal record!
+
+================================================================================
+
+CONGRATULATIONS! YOU'RE NOW A GAME DEVELOPER! 🚀🎮
+
+Next Steps:
+1. Play your game & enjoy it!
+2. Celebrate your achievement!
+3. Share your game with the world
+4. Consider next project ideas
+5. Keep learning & improving!
+
+Thank you for following this 14-day journey.
+You've proven that game development is achievable with dedication.
+
+Now go make more games! 🐍✨
+
+================================================================================
+END OF COMPLETE TUTORIAL
+================================================================================
+
+Semoga tutorial ini bermanfaat!
+Jika stuck, cek Troubleshooting sections, console output, atau Godot docs.
+Semoga sukses dengan presentation Anda!
+
+Selamat! Anda telah menyelesaikan Snake Game lengkap! 🎉🎮✨

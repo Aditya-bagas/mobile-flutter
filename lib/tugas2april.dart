@@ -21,21 +21,27 @@ KONSEP PENTING DALAM FLUTTER:
 
 DAFTAR WIDGET YANG DIGUNAKAN:
 ==============================
+Setup Aplikasi
 1. MaterialApp - Setup aplikasi dengan theme dan home page
 2. Scaffold - Struktur dasar halaman (AppBar, body, FAB)
-3. AppBar - Header/judul di atas halaman
-4. ListView - Container yang bisa di-scroll ke bawah
-5. Card - Box/kotak untuk menampilkan informasi
+Header & Navigation 
+3. FloatingActionButton - Tombol bulat di pojok bawah kanan
+4. AppBar - Header/judul di atas halaman
+Layout/Tata Letak
+5. ListView - Container yang bisa di-scroll ke bawah
 6. Row - Atur widget secara horizontal (kiri-kanan)
 7. Column - Atur widget secara vertikal (atas-bawah)
 8. Container - Box kosong untuk styling dan dekorasi
 9. GridView - Layout grid (tabel) untuk banyak item
-10. FloatingActionButton - Tombol bulat di pojok bawah kanan
-11. IconButton - Tombol kecil dengan icon
-12. ElevatedButton - Tombol dengan background warna
-13. OutlinedButton - Tombol dengan border outline saja
+Buttons/Tombol
+10. IconButton - Tombol kecil dengan icon
+11. ElevatedButton - Tombol dengan background warna
+12. OutlinedButton - Tombol dengan border outline saja
+Content/Isi
+13. Card - Box/kotak untuk menampilkan informasi
 14. Text - Widget untuk menulis teks
 15. Icon - Widget untuk menampilkan icon/simbol
+Spacing/Jarak
 16. SizedBox - Box untuk spacing/jarak antar widget
 17. Expanded - Widget yang mengisi space kosong
 
@@ -111,7 +117,7 @@ class _AcademicDashboardState extends State<AcademicDashboard> {
   // Di aplikasi real, data ini akan datang dari server/database
 
   final String studentName = "Aditya Bagas Prakoso"; // Nama mahasiswa
-  final String studentNIM = "2024001"; // Nomor Identitas Mahasiswa
+  final String studentNIM = "24.01.53.0003"; // Nomor Identitas Mahasiswa
   final String semester = "Semester 4"; // Semester aktif
 
   // ========== DATA AKADEMIK ==========
